@@ -1,0 +1,132 @@
+﻿@{
+    ViewData["Title"] = "Index Aceptaciones";
+}
+
+<div class="ibox-content">
+
+    <div class="row form-group">
+
+        <div class="col-md-3">
+
+            <div id="data_1">
+
+                <div class="input-group date">
+
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" id="fecha" name="fecha" class="form-control">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row form-group">
+
+        <div class="col-lg-3 col-md-3" style="text-align:center;">
+
+            <button class="btn btn-danger dim btn-large-dim" type="button" onclick="allReports(1)"><i class="fa fa-stethoscope"></i></button>
+
+        </div>
+
+        <div class="col-lg-3 col-md-3" style="text-align:center;">
+
+            <button class="btn btn-info  dim btn-large-dim btn-outline" type="button" onclick="allReports(2)"><i class="fa fa-flask"></i></button>
+
+        </div>
+
+        <div class="col-lg-3 col-md-3" style="text-align:center;">
+
+            <button class="btn btn-warning dim btn-large-dim" type="button" onclick="allReports(3)"><i class="fa fa-thermometer"></i></button>
+
+        </div>
+
+        <div class="col-lg-3 col-md-3" style="text-align:center;">
+
+            <button class="btn btn-primary  dim btn-large-dim" type="button" onclick="allReports(4)"><i class="fa fa-chain"></i></button>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section scripts
+{
+    @*-- css --*@
+    <link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/css/plugins/iCheck/custom.css" rel="stylesheet" />
+
+    @*-- js --*@
+
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/js/plugins/iCheck/icheck.min.js"></script>
+
+    <script language="javascript">
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            $('.dataTables-example').DataTable({
+                pageLength: 50,
+                responsive: true,
+                "order": [[6, "desc"]],
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy' },
+                    { extend: 'csv' },
+                    { extend: 'excel', title: 'ExampleFile' },
+                    { extend: 'pdf', title: 'ExampleFile' },
+
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+                ]
+
+            });
+        });
+
+        $('#data_1 .input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true,
+            format: "dd/mm/yyyy"
+        });
+
+        function allReports(opcion) {
+            var _fechita = $("#fecha").val();
+            //alert("La fecha es: " + _fechita + " Opcion: " + _opcion);
+
+            if (opcion == 1) {
+                location.href = '@Url.Action("aceptacionMedico", "ImpresionAceptaciones")' + '?fecha='+ _fechita;
+            }
+
+            if (opcion == 2) {
+                location.href = '@Url.Action("aceptacionToxicologico", "ImpresionAceptaciones")' + '?fecha=' + _fechita;
+            }
+
+            if (opcion == 3) {
+                location.href = '@Url.Action("aceptacionAnalisis", "ImpresionAceptaciones")' + '?fecha=' + _fechita;
+            }
+
+            if (opcion == 4) {
+                location.href = '@Url.Action("cadenasCustodia", "ImpresionAceptaciones")' + '?fecha=' + _fechita;
+            }
+        }
+
+    </script>
+}

@@ -1,0 +1,1662 @@
+﻿@model IEnumerable<MedToxQui.Models.Consultas.ListaExamenesQuimicosModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@using (Html.BeginForm("Index", "Quimica"))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Evaluados ingresados. <small>Basado en fecha de alta</small>
+        </div>
+        <div class="panel-body">
+
+            <div class="row form-group">
+                <div class="col-md-3">
+                    <div id="data_1">
+                        <div class="input-group date">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" id="fecha" name="fecha" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+}
+
+@if (Model != null)
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover dataTables-example">
+            <thead>
+                <tr>
+                    <th>IdH</th>
+                    <th>Evaluado</th>
+                    <th>Fecha</th>
+                    <th>Dependencia</th>
+                    <th>Folio</th>
+                    <th>Gaf.</th>
+                    <th>Obs</th>
+                    <th>Estudios</th>
+                    <th>Imp</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="vertical-align:middle;">
+                            @Html.DisplayFor(modelITem => item.idhistorico)
+                        </td>
+                        <td style="vertical-align:middle;">
+                            @Html.DisplayFor(modelITem => item.evaluado)
+                        </td>
+                        <td style="vertical-align:middle;">
+                            @Html.DisplayFor(modelITem => item.fecha)
+                        </td>
+                        <td style="vertical-align:middle;">
+                            @Html.DisplayFor(modelITem => item.dependencia)
+                        </td>
+                        <td style="vertical-align:middle;">
+                            @Html.DisplayFor(modelITem => item.FOLIO)
+                        </td>
+                        <td style="vertical-align:middle;">
+                            @Html.DisplayFor(modelITem => item.gafete)
+                        </td>
+                        <td style="vertical-align:middle;">
+                            <p>
+                                <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-success btn-xs" data-target="#modalObservaciones" value="Obs Pub" onclick="modalObs(@item.idhistorico)" />
+                            </p>
+                        </td>
+                        <td>
+                            @Html.Hidden("idHistorico")
+                            @Html.Hidden("accion") @*accion para saber si grabar o actualizar*@
+                            @Html.Hidden("folio")
+                            <div class="table-responsive">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding-right: 5px;">
+                                                @if (item.hayEgo.Trim() != "N")
+                                                {
+                                                    <p>
+                                                        <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-danger btn-xs" data-target="#modalEgo" value="Act EGO" onclick="mostrarEgo(@item.idhistorico, 2, '@item.FOLIO')" />
+                                                    </p>
+                                                }
+                                                else
+                                                {
+                                                    <p>
+                                                        <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-success btn-xs" data-target="#modalEgo" value="New EGO" onclick="mostrarEgo(@item.idhistorico, 1, '@item.FOLIO')" />
+                                                    </p>
+                                                }
+                                                @if (item.hayBH.Trim() != "N")
+                                                {
+                                                    <p>
+                                                        <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-danger btn-xs" data-target="#modalBH" value="Act BH" onclick="mostrarBH(@item.idhistorico, 2, '@item.FOLIO')" />
+                                                    </p>
+                                                }
+                                                else
+                                                {
+                                                    <p>
+                                                        <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-success btn-xs" data-target="#modalBH" value="New BH" onclick="mostrarBH(@item.idhistorico, 1, '@item.FOLIO')" />
+                                                    </p>
+                                                }
+                                            </td>
+                                            <td style="padding-left: 5px;">
+                                                @if (item.hayQS.Trim() != "N")
+                                                {
+                                                    <p>
+                                                        <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-danger btn-xs" data-target="#modalQS" value="Act QS" onclick="mostrarQS(@item.idhistorico, 2, '@item.FOLIO')" />
+                                                    </p>
+                                                }
+                                                else
+                                                {
+                                                    <p>
+                                                        <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-success btn-xs" data-target="#modalQS" value="New QS" onclick="mostrarQS(@item.idhistorico, 1, '@item.FOLIO')" />
+                                                    </p>
+                                                }
+                                                @if (item.hayTx == 0)
+                                                {
+                                                    <p>
+                                                        <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-success btn-xs" data-target="#modalTOX" value="New TOX" onclick="mostrarTOX(@item.idhistorico, 1, '@item.FOLIO')" />
+                                                    </p>
+                                                }
+                                                else
+                                                {
+                                                    <p>
+                                                        <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-danger btn-xs" data-target="#modalTOX" value="Act TOX" onclick="mostrarTOX(@item.idhistorico, 2, '@item.FOLIO')" />
+                                                    </p>
+                                                }
+                                                @*<p>
+                                                        <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-success btn-xs" data-target="#modalObservaciones" value="Obs Pub" onclick="modalObs(@item.idhistorico)" />
+                                                    </p>*@
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-responsive">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding-right: 5px;">
+                                                @if (item.hayEgo.Trim() != "N")
+                                                {
+                                                    <p>
+                                                        <a class="popup btn btn-block btn-outline btn-success btn-xs" href="@Url.Action("reporteEgo","ImpresionQuimica", new { idHistorico = item.idhistorico })" target="_blank">EGO</a>
+                                                    </p>
+                                                }
+                                                @if (item.hayBH.Trim() != "N")
+                                                {
+                                                    <p>
+                                                        <a class="popup btn btn-block btn-outline btn-success btn-xs" href="@Url.Action("reporteBH","ImpresionQuimica", new { idHistorico = item.idhistorico })" target="_blank">BH</a>
+                                                    </p>
+                                                }
+                                            </td>
+                                            <td style="padding-right: 5px;">
+                                                @if (item.hayQS.Trim() != "N")
+                                                {
+                                                    <p>
+                                                        <a class="popup btn btn-block btn-outline btn-success btn-xs" href="@Url.Action("reporteQS","ImpresionQuimica", new { idHistorico = item.idhistorico })" target="_blank">QS</a>
+                                                    </p>
+                                                }
+                                                @if (item.hayTx != 0)
+                                                {
+                                                    <p>
+                                                        <a class="popup btn btn-block btn-outline btn-success btn-xs" href="@Url.Action("reporteTX","ImpresionQuimica", new { idHistorico = item.idhistorico })" target="_blank">TOX</a>
+                                                    </p>
+                                                }
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    //EGO
+    <div class="modal inmodal" id="modalEgo" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    @*<i class="fa fa-calendar modal-icon"></i>*@
+                    <h4 class="modal-title">Examen General de Orina</h4>
+                    <small class="font-bold">EGO</small>
+                </div>
+
+                <div class="modal-body">
+                    <div method="get" class="form-horizontal">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Aspecto</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="aspecto" name="aspecto"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Color</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="color" name="color"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">PH</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="ph" name="ph"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Densidad</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="densidad" name="densidad"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Glucosa</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="glucosa" name="glucosa"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Bilirrubina</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="bilirrubina" name="bilirrubina"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Cetona</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="cetona" name="cetona"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Proteinas</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="proteinas" name="proteinas"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Urobilinogeno</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="urobilinogeno" name="urobilinogeno" value="0.2"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Sangre</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="sangre" name="sangre"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Nitrito</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="nitrito" name="nitrito"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Acido Ascórbioc</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="acido" name="acido"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Leucocitos</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="leucocitos" name="leucocitos"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Eritrocitos</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="eritrocitos" name="eritrocitos"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Bacterias</label>
+                                    <div class="col-sm-8">@Html.DropDownList("bacterias", (IEnumerable<SelectListItem>)ViewBag.cmbEgo, new { @class = "form-control" })</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Celulas</label>
+                                    <div class="col-sm-8">@Html.DropDownList("celulas", (IEnumerable<SelectListItem>)ViewBag.cmbEgo, new { @class = "form-control" })</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Cilindros</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="cilindros" name="cilindros"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Cristales</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="cristales" name="cristales"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Observaciones</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="observaciones" name="observaciones" value="Filamento mucoso"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Realizó</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" asp-items="@(new SelectList(ViewBag.losQuimicos, "Nombre", "NombreUsuario"))" id="usu_rea_ego" name="usu_rea_ego">
+                                            @*<option>Seleccione un químico</option>*@
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Supervisó</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" asp-items="@(new SelectList(ViewBag.losQuimicos, "Nombre", "NombreUsuario"))" id="usu_sup_ego" name="usu_sup_ego">
+                                            <option>Seleccione un químico</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Fec. Proc. Mta.</label>
+                                    <div class="col-md-8">
+                                        <div id="data_1">
+                                            <div class="input-group date">
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" id="f_procesamiento" name="f_procesamiento" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="agregaActualizaEgo();">Grabar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    //BH
+    <div class="modal inmodal" id="modalBH" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    @*<i class="fa fa-calendar modal-icon"></i>*@
+                    <h4 class="modal-title">Biometría Hemática</h4>
+                    <small class="font-bold">BH</small>
+                </div>
+
+                <div class="modal-body">
+                    <div method="get" class="form-horizontal">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">WBC</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="WBC" name="WBC"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Limp %</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Limph2" name="Limph2"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Mono %</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Mid2" name="Mid2"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Neu %</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Neu2" name="Neu2"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Eos %</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Eos2" name="Eos2"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Bas %</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Bas2" name="Bas2"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Limp #</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Limph" name="Limph" readonly></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Mono #</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Mid" name="Mid" readonly></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Neu #</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Neu" name="Neu" readonly></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Eos #</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Eos" name="Eos" readonly></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Bas #</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Bas" name="Bas" readonly></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">HGB</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="HGB" name="HGB"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">RBC</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="RBC" name="RBC"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">HTC</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="HTC" name="HTC"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">MCv</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="MCv" name="MCv"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">MCH</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="MCH" name="MCH"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">MCHC</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="MCHC" name="MCHC"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">RDWCV</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="RDWCV" name="RDWCV"></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">RDWSD</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="RDWSD" name="RDWSD"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">PLT</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="PLT" name="PLT"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">MPV</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="MPV" name="MPV"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">PDW</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="PDW" name="PDW"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">PCT</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="PCT" name="PCT"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Gpo Sang.</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Tiposangre" name="Tiposangre"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Realizó</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" asp-items="@(new SelectList(ViewBag.losQuimicos, "Nombre", "NombreUsuario"))" id="usu_rea_bh" name="usu_rea_bh">
+                                            <option>-- Seleccione --</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Supervisó</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" asp-items="@(new SelectList(ViewBag.losQuimicos, "Nombre", "NombreUsuario"))" id="usu_superviso" name="usu_superviso">
+                                            <option>-- Seleccione --</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">F P Mta.</label>
+                                    <div class="col-md-8">
+                                        <div id="data_1">
+                                            <div class="input-group date">
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" id="f_procesahematica" name="f_procesahematica" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="form-group">
+                                    <label>Observación</label>
+                                    @Html.TextArea("Observacionqs", new { @id = "Observacionqs", @class = "form-control", rows = 2 })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="agregaActualizaBH();">Grabar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    //QS
+    <div class="modal inmodal" id="modalQS" tabindex="-1" role="dialog" aria-hidden="true">
+
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content animated bounceInRight">
+
+                <div class="modal-header">
+
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+                    @*<i class="fa fa-calendar modal-icon"></i>*@
+
+                    <h4 class="modal-title">Química Sanguínea</h4>
+
+                    <small class="font-bold">QS</small>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div method="get" class="form-horizontal">
+
+                        <div class="row">
+
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Glucosa</label>
+
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Glucosa" name="Glucosa"></div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Acido</label>
+
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Acido" name="Acido"></div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Colesterol</label>
+
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Colesterol" name="Colesterol"></div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Trigliceridos</label>
+
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Trigliceridos" name="Trigliceridos"></div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Urea</label>
+
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Urea" name="Urea"></div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Creatinina</label>
+
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Creatinina" name="Creatinina"></div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Colesterol - LAD</label>
+
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="ColesterolAlta" name="ColesterolAlta"></div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Colesterol - LBD</label>
+
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="ColesterolBaja" name="ColesterolBaja"></div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Metodología</label>
+
+                                    <div class="col-sm-8">@Html.DropDownList("metodologiaqs", (IEnumerable<SelectListItem>)ViewBag.metodologiaQS, "Seleccione una opción", new { @class = "form-control" })</div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Realizó</label>
+
+                                    <div class="col-sm-8">
+
+                                        <select class="form-control" asp-items="@(new SelectList(ViewBag.losQuimicos, "Nombre", "NombreUsuario"))" id="usu_rea_qs" name="usu_rea_qs">
+
+                                            <option>-- Seleccione --</option>
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Supervisó</label>
+
+                                    <div class="col-sm-8">
+
+                                        <select class="form-control" asp-items="@(new SelectList(ViewBag.losQuimicos, "Nombre", "NombreUsuario"))" id="usu_supervisoqs" name="usu_supervisoqs">
+
+                                            <option>-- Seleccione --</option>
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">F P Mta.</label>
+
+                                    <div class="col-md-8">
+
+                                        <div id="data_1">
+
+                                            <div class="input-group date">
+
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" id="f_procesamientosangre" name="f_procesamientosangre" class="form-control">
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+
+                                <div class="form-group">
+
+                                    <label>Observación</label>
+
+                                    @Html.TextArea("Observacionquimicas", new { @id = "Observacionquimicas", @class = "form-control", rows = 2 })
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+
+                    <button type="button" class="btn btn-primary" onclick="agregaActualizaQS();">Grabar</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    //TOX
+    <div class="modal inmodal" id="modalTOX" tabindex="-1" role="dialog" aria-hidden="true">
+
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content animated bounceInRight">
+
+                <div class="modal-header">
+
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+                    @*<i class="fa fa-calendar modal-icon"></i>*@
+
+                    <h4 class="modal-title">Evaluación Toxicológica</h4>
+
+                    <small class="font-bold">TX</small>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div method="get" class="form-horizontal">
+
+                        <div class="row">
+
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Tipo Muestra</label>
+
+                                    <div class="col-sm-8">@Html.DropDownList("rs_tmuestra", (IEnumerable<SelectListItem>)ViewBag.toxMuestras, "-- Seleccione --", new { @class = "form-control" })</div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Resultado</label>
+
+                                    <div class="col-sm-8">@Html.DropDownList("resultado", (IEnumerable<SelectListItem>)ViewBag.toxRes_1, "-- Seleccione --", new { @class = "form-control" })</div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">MARIHUANA</label>
+
+                                    <div class="col-sm-8">@Html.DropDownList("rs_mari", (IEnumerable<SelectListItem>)ViewBag.toxRes_2, new { @class = "form-control" })</div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">COCAINA</label>
+
+                                    <div class="col-sm-8">@Html.DropDownList("rs_coca", (IEnumerable<SelectListItem>)ViewBag.toxRes_2, new { @class = "form-control" })</div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">ANFETAMINAS</label>
+
+                                    <div class="col-sm-8">@Html.DropDownList("rs_anfe", (IEnumerable<SelectListItem>)ViewBag.toxRes_2, new { @class = "form-control" })</div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">BENZODIACEPINAS</label>
+
+                                    <div class="col-sm-8">@Html.DropDownList("rs_benzo", (IEnumerable<SelectListItem>)ViewBag.toxRes_2, new { @class = "form-control" })</div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">BARBITURICOS</label>
+
+                                    <div class="col-sm-8">@Html.DropDownList("rs_barbi", (IEnumerable<SelectListItem>)ViewBag.toxRes_2, new { @class = "form-control" })</div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">METANFETAMINAS</label>
+
+                                    <div class="col-sm-8">@Html.DropDownList("rs_meta", (IEnumerable<SelectListItem>)ViewBag.toxRes_2, new { @class = "form-control" })</div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">F P Mtra</label>
+
+                                    <div class="col-md-8">
+
+                                        <div id="data_1">
+
+                                            <div class="input-group date">
+
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" id="rs_f_result" name="rs_f_result" class="form-control">
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">HORA PROCESO</label>
+
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="rs_h_result" name="rs_h_result"></div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Metodología</label>
+
+                                    <div class="col-sm-8">@Html.DropDownList("rs_metodo", (IEnumerable<SelectListItem>)ViewBag.metodologiaTOX, "Seleccione una opción", new { @class = "form-control" })</div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="col-sm-4 control-label">Supervisó</label>
+
+                                    <div class="col-sm-8">
+
+                                        <select class="form-control" asp-items="@(new SelectList(ViewBag.losQuimicos, "Nombre", "NombreUsuario"))" id="usu_supervisoTox" name="usu_supervisoTox">
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label>Observación</label>
+
+                                    @Html.TextArea("observacionTox", new { @id = "observacionTox", @class = "form-control", rows = 4 })
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+
+                    <button type="button" class="btn btn-primary" onclick="agregaActualizaTOX();">Grabar</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    //Observaciones
+    <div class="modal inmodal" id="modalObservaciones" tabindex="-1" role="dialog" aria-hidden="true">
+
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content animated bounceInRight">
+
+                <div class="modal-header">
+
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+                    @*<i class="fa fa-calendar modal-icon"></i>*@
+
+                    <h3 class="modal-title">Observaciones Públicas y Custodia</h3>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div method="get" class="form-horizontal">
+
+                        <div class="row">
+
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <i class="fa fa-pencil-square-o"></i> Observaciones Pública
+                                            </div>
+                                            <div class="panel-body">
+                                                <table class="table table-striped table-bordered" style="font-size:small">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>AREA</th>
+                                                            <th>FECHA</th>
+                                                            <th>OBSERVACION</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="obs_publica">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <i class="fa fa-pencil-square-o"></i> Observaciones Custodia
+                                            </div>
+                                            <div class="panel-body">
+
+                                                <table class="table table-striped table-bordered" style="font-size:small">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>FECHA</th>
+                                                            <th>OBSERVACION</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="obs_publicaCustodia">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label>Observación</label>
+
+                                    @Html.TextArea("Observacionpublica", new { @id = "Observacionpublica", @class = "form-control", rows = 2 })
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    @Html.Hidden("idHistoricoObs")
+
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+
+                    <button type="button" class="btn btn-primary" onclick="grabarObservacionPublica();">Grabar</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+}
+
+@section scripts
+{
+    @*-- css --*@
+    <link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/css/plugins/iCheck/custom.css" rel="stylesheet" />
+    <link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+    @*-- js --*@
+
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/js/plugins/iCheck/icheck.min.js"></script>
+    <script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+    <script language="javascript">
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            $('.dataTables-example').DataTable({
+                pageLength: 50,
+                responsive: true,
+                "order": [[6, "desc"]],
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy' },
+                    { extend: 'csv' },
+                    { extend: 'excel', title: 'ExampleFile' },
+                    { extend: 'pdf', title: 'ExampleFile' },
+
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+                ]
+
+            });
+        });
+
+        $('#data_1 .input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true,
+            format: "dd/mm/yyyy"
+        });
+
+        //--------------------------------------------------------------------------------------------------------------------------------- EGO
+        function limpiarEgo() {
+            $('#aspecto').val('');
+            $('#color').val('Amarillo');
+            $('#ph').val('');
+            $('#densidad').val('');
+            $('#glucosa').val('Negativo');
+            $('#bilirrubina').val('Negativo');
+            $('#cetona').val('Negativo');
+            $('#proteinas').val('Negativo');
+            $('#urobilinogeno').val('0.2');
+            $('#sangre').val('Negativo');
+            $('#nitrito').val('Negativo');
+            $('#acido').val('Negativo');
+            $('#leucocitos').val('');
+            $('#eritrocitos').val('');
+            $('#cilindros').val('0');
+            $('#cristales').val('0');
+            $('#observaciones').val('Filamento mucoso');
+            $('#f_procesamiento').val('');
+        }
+
+        function mostrarEgo(IdH, action, folio) {
+            //alert(IdH + " "+ action);
+            $('#idHistorico').val(IdH);
+            $("#accion").val(action);
+            $("#folio").val(folio);
+            $("#modalEgo").modal('show');
+
+            if (action == 1) {       // Nuevo registro en EGO
+                limpiarEgo();
+            }
+            else {                  // Actualizar registro EGO
+                recuperarEgo(IdH);
+            }
+        }
+
+        function recuperarEgo(IdH) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ObtenerDatosAnalisisQuimicos", "Quimica")",
+                dataType:'json',
+                data: { idhistorico: IdH, estudio: 1 },
+                success: function (data) {
+                    $('#aspecto').val(data.aspecto);
+                    $('#color').val(data.color);
+                    $('#ph').val(data.ph);
+                    $('#densidad').val(data.densidad);
+                    $('#glucosa').val(data.glucosa);
+                    $('#bilirrubina').val(data.bilirrubina);
+                    $('#cetona').val(data.cetona);
+                    $('#proteinas').val(data.proteinas);
+                    $('#urobilinogeno').val(data.urobilinogeno);
+                    $('#sangre').val(data.sangre);
+                    $('#nitrito').val(data.nitritos);
+                    $('#acido').val(data.acidoAscorbico);
+                    $('#leucocitos').val(data.leucocitos);
+                    $('#eritrocitos').val(data.eritrocitos);
+                    $('#cilindros').val(data.cilindros);
+                    $('#cristales').val(data.cristales);
+                    $('#observaciones').val(data.observaciones);
+                    $('#bacterias').val(data.bacterias);
+                    $('#celulas').val(data.celulas);
+                    $('#usu_rea_ego').val(data.realizo);
+                    $('#usu_sup_ego').val(data.superviso);
+                    $('#f_procesamiento').val(data.f_procesamiento);
+                },
+                error: function (result) {
+                    alert("Algo se envio mal de observaciones");
+                }
+            });
+        }
+
+        function agregaActualizaEgo() {
+            var _idhistorico = $('#idHistorico').val();
+            var _FOLIO = $('#folio').val();
+            var _Aspecto = $('#aspecto').val();
+            var _Color = $('#color').val();
+            var _PH = $('#ph').val();
+            var _Densidad = $('#densidad').val();
+            var _Glucosa = $('#glucosa').val();
+            var _Bilirrubina = $('#bilirrubina').val();
+            var _Cetona = $('#cetona').val();
+            var _Proteinas = $('#proteinas').val();
+            var _Urobilinogeno = $('#urobilinogeno').val();
+            var _Sangre = $('#sangre').val();
+            var _Nitritos = $('#nitrito').val();
+            var _Leucocitos = $('#leucocitos').val();
+            var _Eritrocitos = $('#eritrocitos').val();
+            var _Bacterias = $('#bacterias').val();
+            var _Celulas = $('#celulas').val();
+            var _Cilindros = $('#cilindros').val();
+            var _Cristales = $('#cristales').val();
+            var _Observaciones = $('#observaciones').val();
+            var _usu_rea_ego = $('#usu_rea_ego').val();
+            var _AcidoAscorbico = $('#acido').val();
+            var _usu_superviso = $('#usu_sup_ego').val();
+            var _f_procesamiento = $('#f_procesamiento').val();
+            var _accion = $("#accion").val();
+	        @*@usu_rea_ego varchar(10),
+	        @usu_superviso varchar(10),*@
+
+            //validar los campos que no esten vacios
+            if (_idhistorico == "" || _FOLIO == "" || _Aspecto == "" || _Color == "" || _PH == "" || _Densidad == "" || _Glucosa == "" || _Bilirrubina == "" || _Cetona == "" || _Proteinas == "" || _Urobilinogeno == "" || _Sangre == "" || _Nitritos == "" || _Leucocitos == "" || _Eritrocitos == "" || _Bacterias == "" || _Celulas == "" || _Cilindros == "" || _Cristales == "" || _Observaciones == "" || _AcidoAscorbico == "" || _f_procesamiento == "") {
+                swal({
+                    title: "Falta infomación por registrar",
+                    text: "Completar campos",
+                    type: "success"
+                });
+            }
+            else {
+                var url = "@Url.Action("AgregaActualizaEGO", "Quimica")";
+                var data = { idhistorico: _idhistorico, FOLIO: _FOLIO, Aspecto: _Aspecto, Color: _Color, PH: _PH, Densidad: _Densidad, Glucosa: _Glucosa, Bilirrubina: _Bilirrubina, Cetona: _Cetona, Proteinas: _Proteinas, Urobilinogeno: _Urobilinogeno, Sangre: _Sangre, Nitritos: _Nitritos, Leucocitos: _Leucocitos, Eritrocitos: _Eritrocitos, Bacterias: _Bacterias, Celulas: _Celulas, Cilindros: _Cilindros, Cristales: _Cristales, Observaciones: _Observaciones, usu_rea_ego: _usu_rea_ego, AcidoAscorbico: _AcidoAscorbico, usu_superviso: _usu_superviso, f_procesamiento: _f_procesamiento, accion: _accion };
+                $.post(url, data).done(function (data) {
+                    if (data == "Ok") {
+
+                        $('#modalEgo').modal('hide');
+
+                        swal({
+                            title: "EGO Agregado / Actualizado",
+                            text: "Actualizar Pantalla?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Sí Actualizar",
+                            closeOnConfirm: false
+                        }, function () {
+                            location.href = "@Url.Action("Index", "Quimica", new { @fecha = ViewBag.fechapasarTox })";
+                        });
+                    }
+                }).fail(manejarErrorAjax);
+            }
+        }
+
+        //--------------------------------------------------------------------------------------------------------------------------------- BH
+
+        //---------------------------------------------------------------------- Calculando los valores aprtir del porcentajes
+        $('#Limph2').blur(function () {
+            var v_limp2 = ($('#WBC').val() * ($('#Limph2').val() / 100)).toFixed(2);
+            $('#Limph').val(v_limp2);
+        });
+
+        $('#Mid2').blur(function () {
+            var v_limp2 = ($('#WBC').val() * ($('#Mid2').val() / 100)).toFixed(2);
+            $('#Mid').val(v_limp2);
+        });
+
+        $('#Neu2').blur(function () {
+            var v_limp2 = ($('#WBC').val() * ($('#Neu2').val() / 100)).toFixed(2);
+            $('#Neu').val(v_limp2);
+        });
+
+        $('#Eos2').blur(function () {
+            var v_limp2 = ($('#WBC').val() * ($('#Eos2').val() / 100)).toFixed(2);
+            $('#Eos').val(v_limp2);
+        });
+
+        $('#Bas2').blur(function () {
+            var v_limp2 = ($('#WBC').val() * ($('#Bas2').val() / 100)).toFixed(2);
+            $('#Bas').val(v_limp2);
+
+            cientporciento = (Number($('#Limph2').val()) + Number($('#Mid2').val()) + Number($('#Neu2').val()) + Number($('#Eos2').val()) + Number($('#Bas2').val()));
+
+            if (cientporciento != 100) {
+                swal("No esta el 100% requerido", "Verifique los porcentajes", "error");
+            }
+
+        });
+
+        function limpiarBh() {
+            $('#WBC').val('');
+            $('#Limph2').val('');
+            $('#Mid2').val('');
+            $('#Neu2').val('');
+            $('#Eos2').val('');
+            $('#Bas2').val('');
+            $('#Limph').val('');
+            $('#Mid').val('');
+            $('#Neu').val('');
+            $('#Eos').val('');
+            $('#Bas').val('');
+            $('#HGB').val('');
+            $('#RBC').val('');
+            $('#HTC').val('');
+            $('#MCv').val('');
+            $('#MCH').val('');
+            $('#MCHC').val('');
+            $('#RDWCV').val('');
+            $('#RDWSD').val('');
+            $('#PLT').val('');
+            $('#MPV').val('');
+            $('#PDW').val('');
+            $('#PCT').val('');
+            $('#Tiposangre').val('');
+            $('#f_procesahematica').val('');
+            $('#Observacionqs').val('');
+        }
+
+        function mostrarBH(IdH, action, folio) {
+            //alert(IdH + " "+ action);
+            $('#idHistorico').val(IdH);
+            $("#accion").val(action);
+            $("#folio").val(folio);
+            $("#modalBH").modal('show');
+
+            if (action == 1) {
+                limpiarBh();
+            }
+            else {
+                recuperarBH(IdH);
+            }
+        }
+
+        function recuperarBH(IdH) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ObtenerDatosAnalisisQuimicoBH", "Quimica")",
+                dataType:'json',
+                data: { idhistorico: IdH, estudio: 2 },
+                success: function (data) {
+                    $('#WBC').val(data.wbc);
+                    $('#Limph2').val(data.limph2);
+                    $('#Mid2').val(data.mid2);
+                    $('#Neu2').val(data.neu2);
+                    $('#Eos2').val(data.eos2);
+                    $('#Bas2').val(data.bas2);
+                    $('#Limph').val(data.limph);
+                    $('#Mid').val(data.mid);
+                    $('#Neu').val(data.neu);
+                    $('#Eos').val(data.eos);
+                    $('#Bas').val(data.bas);
+                    $('#HGB').val(data.hgb);
+                    $('#RBC').val(data.rbc);
+                    $('#HTC').val(data.htc);
+                    $('#MCv').val(data.mCv);
+                    $('#MCH').val(data.mch);
+                    $('#MCHC').val(data.mchc);
+                    $('#RDWCV').val(data.rdwcv);
+                    $('#RDWSD').val(data.rdwsd);
+                    $('#PLT').val(data.plt);
+                    $('#MPV').val(data.mpv);
+                    $('#PDW').val(data.pdw);
+                    $('#PCT').val(data.pct);
+                    $('#Tiposangre').val(data.tiposangre);
+                    $('#f_procesahematica').val(data.f_procesahematica);
+                    $('#Observacionqs').val(data.observacion);
+                    $('#usu_rea_bh').val(data.usu_rea_bh);
+                    $('#usu_superviso').val(data.usu_superviso);
+
+                },
+                error: function (result) {
+                    alert("Algo se envio mal de observaciones");
+                }
+            });
+        }
+
+        function agregaActualizaBH() {
+            var _idhistorico = $('#idHistorico').val();
+            var _FOLIO = $('#folio').val();
+            var _WBC = $('#WBC').val();
+            var _Limph = $('#Limph').val();
+            var _Mid = $('#Mid').val();
+            var _Neu = $('#Neu').val();
+            var _Eos = $('#Eos').val();
+            var _Bas = $('#Bas').val();
+            var _Limph2 = $('#Limph2').val();
+            var _Mid2 = $('#Mid2').val();
+            var _Neu2 = $('#Neu2').val();
+            var _Eos2 = $('#Eos2').val();
+            var _Bas2 = $('#Bas2').val();
+            var _HGB = $('#HGB').val();
+            var _RBC = $('#RBC').val();
+            var _HTC = $('#HTC').val();
+            var _MCv = $('#MCv').val();
+            var _MCH = $('#MCH').val();
+            var _MCHC = $('#MCHC').val();
+            var _RDWCV = $('#RDWCV').val();
+            var _RDWSD = $('#RDWSD').val();
+            var _PLT = $('#PLT').val();
+            var _MPV = $('#MPV').val();
+            var _PDW = $('#PDW').val();
+            var _PCT = $('#PCT').val();
+            var _Observacion = $('#Observacionqs').val();
+            var _Tiposangre = $('#Tiposangre').val();
+            var _usu_rea_bh = $('#usu_rea_bh').val();
+            //var _usu_gra_bh = $('#usu_gra_bh').val();
+            var _usu_superviso = $('#usu_superviso').val();
+            var _f_procesahematica = $('#f_procesahematica').val();
+            var _accion = $("#accion").val();
+
+            if (Number($('#Limph2').val()) + Number($('#Mid2').val()) + Number($('#Neu2').val()) + Number($('#Eos2').val()) + Number($('#Bas2').val()) != 100) {
+
+                swal("No esta el 100% requerido", "Verifique los porcentajes", "error");
+
+            }
+            else if (_WBC == "" || _WBC == "0" || _HGB == "" || _HGB == "0" || _RBC == "" || _RBC == "0" || _HTC == "" || _HTC == "0" || _MCv == "" || _MCv == "0" || _MCH == "" || _MCH == "0" || _MCHC == "" || _MCHC == "0" || _RDWCV == "" || _RDWCV == "0" || _RDWSD == "" || _RDWSD == "0" || _PLT == "" || _PLT == "0" || _MPV == "" || _MPV == "0" || _PDW == "" || _PDW == "0" || _PCT == "" || _PCT == "0") {
+
+                swal("Hay campo que requiere un valor", "Verifique los porcentajes", "error");
+
+            }
+            else {
+                var url = "@Url.Action("AgregaActualizaBH", "Quimica")";
+                var data = { Idhistorico: _idhistorico, FOLIO: _FOLIO, WBC: _WBC, Limph: _Limph, Mid: _Mid, Neu: _Neu, Eos: _Eos, Bas: _Bas, Limph2: _Limph2, Mid2: _Mid2, Neu2: _Neu2, Eos2: _Eos2, Bas2: _Bas2, HGB: _HGB, RBC: _RBC, HTC: _HTC, MCv: _MCv, MCH: _MCH, MCHC: _MCHC, RDWCV: _RDWCV, RDWSD: _RDWSD, PLT: _PLT, MPV: _MPV, PDW: _PDW, PCT: _PCT, Observacion: _Observacion, Tiposangre: _Tiposangre, Usu_rea_bh: _usu_rea_bh, Usu_superviso: _usu_superviso, F_procesahematica: _f_procesahematica, Accion: _accion };
+                $.post(url, data).done(function (data) {
+                    if (data == "Ok") {
+
+                        $('#modalBH').modal('hide');
+
+                        swal({
+                            title: "BH Agregado / Actualizado",
+                            text: "Actualizar Pantalla?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Sí Actualizar",
+                            closeOnConfirm: false
+                        }, function () {
+                            location.href = "@Url.Action("Index", "Quimica", new { @fecha = ViewBag.fechapasarTox })";
+                        });
+                    }
+                }).fail(manejarErrorAjax);
+            }
+        }
+
+        //--------------------------------------------------------------------------------------------------------------------------------- QS
+        function limpiarQS() {
+            $('#Glucosa').val('');
+            $('#Acido').val('');
+            $('#Colesterol').val('');
+            $('#Trigliceridos').val('');
+            $('#Urea').val('');
+            $('#Creatinina').val('');
+            $('#ColesterolAlta').val('');
+            $('#ColesterolBaja').val('');
+            $('#f_procesamientosangre').val('');
+            $('#Observacionqs').val('');
+        }
+
+        function mostrarQS(IdH, action, folio) {
+            //alert(IdH + " "+ action);
+            $('#idHistorico').val(IdH);
+            $("#accion").val(action);
+            $("#folio").val(folio);
+            $("#modalQS").modal('show');
+
+            if (action == 1) {
+                limpiarQS();
+            }
+            else {
+                recuperarQS(IdH)
+            }
+        }
+
+        function recuperarQS(IdH) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ObtenerDatosAnalisisQuimicosQuimisaSanguinea", "Quimica")",
+                dataType:'json',
+                data: { idhistorico: IdH, estudio: 3 },
+                success: function (data) {
+                    $('#Glucosa').val(data.glucosa);
+                    $('#Acido').val(data.acido);
+                    $('#Colesterol').val(data.colesterol);
+                    $('#Trigliceridos').val(data.trigliceridos);
+                    $('#Urea').val(data.urea);
+                    $('#Creatinina').val(data.creatinina);
+                    $('#ColesterolAlta').val(data.colesterolAlta);
+                    $('#ColesterolBaja').val(data.colesterolBaja);
+                    $('#metodologiaqs').val(data.metodologia);
+                    $('#usu_rea_qs').val(data.realizo);
+                    $('#usu_supervisoqs').val(data.superviso);
+                    $('#Observacionquimicas').val(data.observacion);
+                    $('#f_procesamientosangre').val(data.f_procesamientoqs);
+                },
+                error: function (result) {
+                    alert("Algo se envio mal de observaciones");
+                }
+            });
+        }
+
+        function agregaActualizaQS() {
+            var _idhistorico = $('#idHistorico').val();
+            var _FOLIO = $('#folio').val();
+            var _Glucosa = $('#Glucosa').val();
+            var _Acido = $('#Acido').val();
+            var _Colesterol = $('#Colesterol').val();
+            var _Trigliceridos = $('#Trigliceridos').val();
+            var _Urea = $('#Urea').val();
+            var _Creatinina = $('#Creatinina').val();
+            var _colesterolAlta = $('#ColesterolAlta').val();
+            var _colesterolBaja = $('#ColesterolBaja').val();
+            var _Observacion = $('#Observacionquimicas').val();
+            var _usu_rea_qs = $('#usu_rea_qs').val();
+            var _usu_supervisoqs = $('#usu_supervisoqs').val();
+            var _metodologiaqs = $('#metodologiaqs').val();
+            var _f_procesamientosangre = $('#f_procesamientosangre').val();
+            var _accion = $('#accion').val();
+
+            //alert('IDH: ' + _idhistorico + ' Folio: ' + _FOLIO + ' Glucosa: ' + _Glucosa + ' Acido: ' + _Acido + ' Colesterol: ' + _Colesterol + ' Trigliceridos: ' + _Trigliceridos + ' Urea: ' + _Urea + ' Creatinina: ' + _Creatinina + ' Colesterol Alta: ' + _colesterolAlta + ' Colesterol Baja: ' + _colesterolBaja + ' Observacion: ' + _Observacion + ' Usuario Realiza: ' + _usu_rea_qs + ' Superviso: ' + _usu_supervisoqs + ' Metodologia: ' + _metodologiaqs + ' Fecha Presemiento: ' + _f_procesamientosangre + ' Accion: ' + _accion);
+
+            if (_Glucosa == "" || _Acido == "" || _Colesterol == "" || _Trigliceridos == "" || _Urea == "" || _Creatinina == "" || _colesterolAlta == "" || _colesterolBaja == "" || _metodologiaqs == "" || _usu_rea_qs == "" || _usu_supervisoqs == "" || _f_procesamientosangre == "") {
+
+                swal("QS - Hay campos que requieren un valor", "Verifique los campos", "error");
+
+            }
+            else {
+                var url = "@Url.Action("AgregaActualizaQS", "Quimica")";
+                var data = { p_idhistorico: _idhistorico, p_folio: _FOLIO, p_glucosa: _Glucosa, p_acido: _Acido, p_colesterol: _Colesterol, p_trigliceridos: _Trigliceridos, p_urea: _Urea, p_creatinina: _Creatinina, p_colesterolAlta: _colesterolAlta, p_colesterolBaja: _colesterolBaja, p_observacion: _Observacion, p_usu_rea_qs: _usu_rea_qs, p_usu_superviso: _usu_supervisoqs, p_metodologia: _metodologiaqs, p_f_procesamientosangre: _f_procesamientosangre, p_accion: _accion };
+                $.post(url, data).done(function (data) {
+                    if (data == "Ok") {
+
+                        $('#modalQS').modal('hide');
+
+                        swal({
+                            title: "QS Agregado / Actualizado",
+                            text: "Actualizar Pantalla?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Sí Actualizar",
+                            closeOnConfirm: false
+                        }, function () {
+                            location.href = "@Url.Action("Index", "Quimica", new { @fecha = ViewBag.fechapasarTox })";
+                        });
+                    }
+                }).fail(manejarErrorAjax);
+            }
+        }
+
+        //--------------------------------------------------------------------------------------------------------------------------------- TOX
+        function limpiarTOX() {
+            $('#rs_tmuestra').val('');
+            $('#rs_f_result').val('');
+            $('#rs_h_result').val('');
+            $('#rs_metodo').val('');
+            $('#usu_supervisoTox').val('');
+            $('#observacionTox').val('');
+        }
+
+        function mostrarTOX(IdH, action, folio) {
+            //alert(IdH + " "+ action);
+            $('#idHistorico').val(IdH);
+            $("#accion").val(action);
+            $("#folio").val(folio);
+            $("#modalTOX").modal('show');
+
+            if (action == 1) {
+                limpiarTOX();
+            }
+            else {
+                recuperarTOX(IdH);
+            }
+        }
+
+        function recuperarTOX(IdH) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ObtenerDatosAnalisisQuimicosToxicologia", "Quimica")",
+                dataType:'json',
+                data: { idhistorico: IdH, estudio: 4 },
+                success: function (data) {
+                    $('#rs_tmuestra').val(data.muestra);
+                    $('#resultado').val(data.resultado);
+                    $('#rs_mari').val(data.mariguana);
+                    $('#rs_coca').val(data.cocaina);
+                    $('#rs_anfe').val(data.anfetaminas);
+                    $('#rs_benzo').val(data.benzodiacepinas);
+                    $('#rs_barbi').val(data.barbituricos);
+                    $('#rs_meta').val(data.metanfetaminas);
+                    $('#rs_f_result').val(data.fprocesamiento);
+                    $('#rs_h_result').val(data.hprocesamiento);
+                    $('#rs_metodo').val(data.metodo);
+                    $('#usu_supervisoTox').val(data.supervisor);
+                    $('#observacionTox').val(data.observacion);
+                },
+                error: function (result) {
+                    alert("Algo se envio mal de observaciones");
+                }
+            });
+        }
+
+        function agregaActualizaTOX() {
+            var _idhistorico = $('#idHistorico').val();
+            var _folio = $("#folio").val();
+            var _muestra = $("#rs_tmuestra").val();
+            var _resultado = $("#resultado").val();
+            var _rs_mari = $("#rs_mari").val() == "Negativo" ? false : true;
+            var _rs_coca = $("#rs_coca").val() == "Negativo" ? false : true;
+            var _rs_anfe = $("#rs_anfe").val() == "Negativo" ? false : true;
+            var _rs_benzo = $("#rs_benzo").val() == "Negativo" ? false : true;
+            var _rs_barbi = $("#rs_barbi").val() == "Negativo" ? false : true;
+            var _rs_meta = $("#rs_meta").val() == "Negativo" ? false : true;
+            var _rs_f_result = $("#rs_f_result").val();
+            var _rs_h_result = $("#rs_h_result").val();
+            var _rs_metodo = $("#rs_metodo").val();
+            var _usu_supervisoTox = $("#usu_supervisoTox").val();
+            var _observacionTox = $("#observacionTox").val();
+            var _accion = $('#accion').val();
+
+            //-------------------------------------------------determinando valor de  rs_negat, rs_posit, rs_invalido y demas valores lógicos
+            var _nega = false;
+            var _posi = false;
+            var _inva = false;
+
+            if (_resultado == 'Negativo') {
+                _nega = true;
+                _posi = false;
+                _inva = false;
+            }
+            if (_resultado == "Positivo") {
+                _nega = false;
+                _posi = true;
+                _inva = false;
+            }
+            if (_resultado == "Invalido") {
+                _nega = false;
+                _posi = false;
+                _inva = true;
+            }
+            //-------------------------------------------------determinando valor de  rs_negat, rs_posit, rs_invalido
+
+            //alert("IDH: " + _idhistorico + " Folio: " + _folio + " Muestra: " + _muestra + " Resultado: " + _resultado + " Mariguana: " + _rs_mari + " Cocaina: " + _rs_coca + " Anfetamina: " + _rs_anfe + " Benzodiacepina: " + _rs_benzo + " Barbituricos: " + _rs_barbi + " Metanfetaminas: " + _rs_meta + " Fecha Resultado: " + _rs_f_result + " Hora proceso: " + _rs_h_result + " Metodo: " + _rs_metodo + " Superviso: " + _usu_supervisoTox + " Observacion: " + _observacionTox + " RS_NEGAT: " + _nega + " RS_POSIT: " + _posi + " RS_INVALIDO: " + _inva);
+
+            if (_muestra == "" || _resultado == "" || _rs_f_result == "" || _rs_h_result == "" || _rs_metodo == "" || _usu_supervisoTox == null) {
+
+                swal("TOX - Hay campos que requieren un valor", "Verifique los campos", "error");
+
+            }
+            else {
+
+                var url = "@Url.Action("AgregaActualizaTOX", "Quimica")";
+                var data = { p_idhistorico: _idhistorico, p_RS_FOLIO: _folio, p_RS_F_RESULT: _rs_f_result, p_RS_TMUESTRA: _muestra, p_RS_NEGAT: _nega, p_RS_POSIT: _posi, p_RS_INVALIDO: _inva, p_RS_MARI: _rs_mari, p_RS_COCA: _rs_coca, p_RS_ANFE :_rs_anfe, p_RS_BENZO: _rs_benzo, p_RS_BARBI: _rs_barbi, p_RS_METODO: _rs_metodo, p_RS_OBSERVA: _observacionTox, p_RS_H_RESULT: _rs_h_result, p_RS_META: _rs_meta, p_accion: _accion, p_usuariosuperviso: _usu_supervisoTox };
+                $.post(url, data).done(function (data) {
+                    if (data == "Ok") {
+
+                        $('#modalTOX').modal('hide');
+
+                        swal({
+                            title: "TOX Agregado / Actualizado",
+                            text: "Actualizar Pantalla?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Sí Actualizar",
+                            closeOnConfirm: false
+                        }, function () {
+                            location.href = "@Url.Action("Index", "Quimica", new { @fecha = ViewBag.fechapasarTox })";
+                        });
+                    }
+                }).fail(manejarErrorAjax);
+            }
+        }
+
+        //--------------------------------------------------------------------------------------------------------------------------------- Observaciones publicas
+        function modalObs(IdH) {
+            //alert(IdH + " "+ action);
+            $('#idHistorico').val(IdH);
+            $("#modalObservaciones").modal('show');
+
+            eliminarFilasObservaciones();
+
+            recuperarObservacionPublica(IdH);
+            recuperarObservacionCustodia(IdH);
+        }
+
+        function eliminarFilasObservaciones() {
+            $("#obs_publica tr").remove();
+            $("#obs_publicaCustodia tr").remove();
+            $("#Observacionpublica").val('');
+        }
+
+        function recuperarObservacionPublica(IdH) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ObtenerObservacionesPublicas", "Quimica")",
+                dataType:'json',
+                data: { idhistorico: IdH },
+                success: function (data) {
+                    //alert(data.length);
+                    //alert(data[0].area + " " + data[0].fecha + " " + data[0].observacion);
+                    for (var i = 0; i < data.length; i++) {
+                        //alert(data[i].area + " " + data[i].fecha + " " + data[i].observacion);
+                        $('#obs_publica').append('<tr><td>' + data[i].area + '</td><td>' + data[i].fecha + '</td><td>' + data[i].observacion +'</td></tr>')
+                    }
+
+                },
+                error: function (result) {
+                    alert("Algo se envio mal de observaciones");
+                }
+            });
+        }
+
+        function recuperarObservacionCustodia(IdH) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ObtenerObservacionesCustodia", "Quimica")",
+                dataType:'json',
+                data: { idhistorico: IdH },
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        $('#obs_publicaCustodia').append('<tr><td>' + data[i].fechaCus + '</td><td>' + data[i].observacionCus +'</td></tr>')
+                    }
+
+                },
+                error: function (result) {
+                    alert("Algo se envio mal de observaciones");
+                }
+            });
+        }
+
+        function grabarObservacionPublica() {
+            var _idHistoricoObservacion = $('#idHistorico').val();
+            var _laObservaciones = $('#Observacionpublica').val();
+
+            if (_laObservaciones == "") {
+
+                swal("TOX - Debe indicar cual es la observación", "Verifique campo", "error");
+
+            }
+            else {
+
+                var url = "@Url.Action("js_agregar_observacion", "Observacion")";
+                var data = { p_idHistorico: _idHistoricoObservacion, p_observacionPublica: _laObservaciones };
+                $.post(url, data).done(function (data) {
+                    if (data == "Ok") {
+                        $('#modalObservaciones').modal('hide');
+                        swal({
+                            title: "Observación Agregada Satisfactoeriamente",
+                            text: "Click para continuar y F5 para actualizar",
+                            type: "success"
+                        });
+                    }
+                }).fail(manejarErrorAjax);
+
+            }
+        }
+
+        function manejarErrorAjax(err) {
+            console.log(err.responseText);
+        }
+
+    </script>
+}

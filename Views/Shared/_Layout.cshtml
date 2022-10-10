@@ -1,0 +1,189 @@
+﻿@using MedToxQui.Helper
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>C3 - Medico Tox</title>
+
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="~/css/animate.css" rel="stylesheet">
+    <link href="~/css/style.css" rel="stylesheet">
+
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/plugins/dataTables/datatables.min.css" />
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+
+    @{
+        //para verlo en mi proyecto
+        //var rutaFoto = "/Content/img/" + @usuario.Id_Usuario.ToString() + ".jpg";
+        //var rutaFoto = "/img/" + @SessionHelper.GetNameIdentifier(User) + ".jpg";
+
+        //para verlo en servidor
+        var rutaFoto = "/fotoUser/" + @SessionHelper.GetNameIdentifier(User) + ".jpg";
+    }
+
+    <div id="wrapper">
+
+        <nav class="navbar-default navbar-static-side" role="navigation">
+
+            <div class="sidebar-collapse">
+
+                <ul class="nav metismenu" id="side-menu">
+
+                    <li class="nav-header">
+
+                        <div class="dropdown profile-element">
+
+                            <span>
+                                @if (@SessionHelper.GetNameIdentifier(User) == "")
+                                {
+                                    <a href="@Url.Action("Index", "Home")"><img alt="image" class="img-thumbnail" src="~/img/escudo.jpg" /></a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Index", "Home")"><img alt="image" class="img-thumbnail" src="@rutaFoto" /></a>
+                                }
+                            </span>
+
+                        </div>
+
+                        <div class="logo-element">
+
+                            SS+
+
+                        </div>
+
+                    </li>
+
+                    @if (@SessionHelper.GetNameRol(User) == "Administrador")
+                    {
+                        <li>
+                            <a href="@Url.Action("Registro", "Home")"><i class="fa fa-drivers-license-o"></i> <span class="nav-label">Registro</span>  </a>
+                        </li>
+                    }
+
+                    @if (@SessionHelper.GetNameRol(User) == "Administrador" || @SessionHelper.GetNameRol(User) == "Quimica")
+                    {
+                        <li>
+                            <a href="#"><i class="fa fa-flask"></i> <span class="nav-label">Quimica</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="@Url.Action("IndexAsociar", "Quimica")"><i class="fa fa-exchange"></i>Asociacion</a></li>
+                                <li><a href="@Url.Action("Index", "Quimica")"><i class="fa fa-file-text-o"></i>Estudios</a></li>
+                            </ul>
+                        </li>
+                    }
+
+                    @if (@SessionHelper.GetNameRol(User) == "Administrador" || @SessionHelper.GetNameRol(User) == "Quimica")
+                    {
+                        <li>
+                            <a href="#"><i class="fa fa-user-o"></i> <span class="nav-label">Reportes</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="@Url.Action("Index", "ImpresionQuimica")"><i class="fa fa-flask"></i>Lab C3</a></li>
+                                <li><a href="@Url.Action("IndexPAFTSC3", "ImpresionQuimica")"><i class="fa fa-flask"></i>PAF - TS C3</a></li>
+                                <li><a href="@Url.Action("IndexMovil", "ImpresionQuimica")"><i class="fa fa-flask"></i>Móvil </a></li>
+                                <li><a href="@Url.Action("IndexAceptaciones", "ImpresionAceptaciones")"><i class="fa fa-chain"></i>Acept - Cad.</a></li>
+                            </ul>
+                        </li>
+                    }
+
+
+                    <li>
+                        <a href="#"><i class="fa fa-search"></i> <span class="nav-label">Consultas</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="@Url.Action("Index", "Consultas")"><i class="fa fa-list"></i>Listado Diario</a></li>
+                            <li><a href="@Url.Action("IndexTotalizadoDiario", "Consultas")"><i class="fa fa-list"></i>Totalizado Diario</a></li>
+                            @if (SessionHelper.GetNameRol(User) == "Administrador" || @SessionHelper.GetNameRol(User) == "Quimica")
+                            {
+                                <li><a href="@Url.Action("IndexAnalisis", "Consultas")"><i class="fa fa-flask"></i>Análisis Quimicos</a></li>
+                            }
+                            <li><a href="@Url.Action("listaSupervisorOcular", "ImpresionQuimica")"><i class="fa fa-list"></i>Listado Sup - Eva</a></li>
+                        </ul>
+                    </li>
+
+
+                </ul>
+
+            </div>
+
+        </nav>
+
+        @* <div id="page-wrapper" class="gray-bg"> *@
+        <div id="page-wrapper" class="gray-bg">
+
+
+            <div class="row border-bottom">
+
+                <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+
+                    <div class="navbar-header">
+
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+
+                    </div>
+
+                    <ul class="nav navbar-top-links navbar-right">
+
+                        <li>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                @*<span class="m-r-sm text-muted welcome-message">Bienvenido(a) @SessionHelper.GetName(User)</span>*@
+                                <span class="m-r-sm text-muted welcome-message">Bienvenido(a) @SessionHelper.GetNameActor(User) - @SessionHelper.GetNameRol(User) </span>
+                            }
+                            else
+                            {
+                                <span class="m-r-sm text-muted welcome-message">Usuario No Autenticado</span>
+                            }
+                        </li>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li>
+                                <a href="@Url.Action("Logout", "Login")"><i class="fa fa-sign-out"></i> Cerrar Sesión</a>
+                            </li>
+                        }
+
+                    </ul>
+
+                </nav>
+
+            </div>
+
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="row">
+                    <div class="col-lg-12">
+                        @RenderBody()
+                        <hr />
+                    </div>
+                </div>
+            </div>
+            <footer>
+                <p>&copy; @DateTime.Now.Year - Sistema Dirección Médico y Toxicológico - UI.</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="~/js/jquery-3.1.1.min.js"></script>
+    @*<script src="~/js/bootstrap.radiomin.js"></script>*@
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="~/js/inspinia.js"></script>
+    <script src="~/js/plugins/pace/pace.min.js"></script>
+
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

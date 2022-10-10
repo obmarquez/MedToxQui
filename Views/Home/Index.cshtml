@@ -1,0 +1,153 @@
+﻿@{
+    ViewData["Title"] = "C3";
+}
+
+@*<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>*@
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div>
+            <div class="col-lg-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-success pull-right">Diario</span>
+                        <h5>Total</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">@ViewBag.totalGeneral.total</h1>
+                        <div class="stat-percent font-bold text-success"><i class="fa fa-group"></i></div>
+                        <small>Total diario</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-info pull-right">Diario</span>
+                        <h5>Hombres</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">@ViewBag.totalHombre.totalHombre</h1>
+                        <div class="stat-percent font-bold text-info"><i class="fa fa-male"></i></div>
+                        <small>Total hombres</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-primary pull-right">Diario</span>
+                        <h5>Mujeres</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">@ViewBag.totalMujer.totalMujer</h1>
+                        <div class="stat-percent font-bold text-navy"><i class="fa fa-female"></i></div>
+                        <small>Total mujeres</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-danger pull-right">Diario</span>
+                        <h5>Confirmatorios</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">@ViewBag.totalConfirmatorio.total</h1>
+                        <div class="stat-percent font-bold text-danger"><i class="fa fa-flask"></i></div>
+                        <small>Total confirmatorios</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Grafica Avance Mensual <small> 2022 </small></h5>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div id="container_quimica" style="min-width: 310px; height: 300px; margin: 0 auto">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section scripts
+{
+    <script src="~/scriptsHighcharts/highcharts.min.js"></script>
+    <script src="~/scriptsHighcharts/exporting.min.js"></script>
+    <script src="~/scriptsHighcharts/export-data.min.js"></script>
+    <script src="~/scriptsHighcharts/data.min.js"></script>
+    <script src="~/scriptsHighcharts/accessibility.min.js"></script>
+    
+    <script type="text/javascript">
+
+        var myArray_avanceQuimica = [];
+        var tri_avanceQuimica = [];
+        @foreach(var item in @ViewBag.avanceQuimica)
+            {
+                @:tri_avanceQuimica = ["@item.mes", parseFloat(@item.total), "@item.mes"];
+                @:myArray_avanceQuimica.push(tri_avanceQuimica);
+            }
+
+        Highcharts.chart('container_quimica', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Evaluaciones mensuales'
+            },
+            subtitle: {
+                text: 'Evaluaciones basadas en fecha de alta'
+            },
+            accessibility: {
+                announceNewData: {
+                    enabled: true
+                }
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: 'Evaluaciones al mes'
+                }
+
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y}'
+                    }
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> <br/>'
+            },
+            series: [
+                {
+                    name: "Evaluaciones",
+                    colorByPoint: true,
+                    data: myArray_avanceQuimica
+                }
+            ]
+        })
+
+    </script>
+
+}

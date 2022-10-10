@@ -1,0 +1,116 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="ibox-title">
+    <h5>Todas las impresiones. </h5><small>Basado en fecha de alta</small>
+</div>
+
+<div class="ibox-content">
+    <div class="row form-group">
+        <div class="col-md-3">
+            <div id="data_1">
+                <div class="input-group date">
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" id="fecha" name="fecha" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-lg-3 col-md-3" style="text-align:center;">
+            <button class="btn btn-warning dim btn-large-dim" type="button" onclick="allReports(1)"><img src="~/img/prescription-bottle-solid.svg" width="40" height="40" /></button>
+        </div>
+        <div class="col-lg-3 col-md-3" style="text-align:center;">
+            <button class="btn btn-danger dim btn-large-dim" type="button" onclick="allReports(2)"><i class="fa fa-tint"></i></button>
+        </div>
+        <div class="col-lg-3 col-md-3" style="text-align:center;">
+            <button class="btn btn-primary  dim btn-large-dim" type="button" onclick="allReports(3)"><img src="~/img/vials-solid.svg" width="50" height="50" /></button>
+        </div>
+        <div class="col-lg-3 col-md-3" style="text-align:center;">
+            <button class="btn btn-info  dim btn-large-dim btn-outline" type="button" onclick="allReports(4)"><i class="fa fa-flask"></i></button>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @*-- css --*@
+    <link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/css/plugins/iCheck/custom.css" rel="stylesheet" />
+    <link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+    @*-- js --*@
+
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/js/plugins/iCheck/icheck.min.js"></script>
+    <script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+    <script language="javascript">
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            $('.dataTables-example').DataTable({
+                pageLength: 50,
+                responsive: true,
+                "order": [[6, "desc"]],
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy' },
+                    { extend: 'csv' },
+                    { extend: 'excel', title: 'ExampleFile' },
+                    { extend: 'pdf', title: 'ExampleFile' },
+
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+                ]
+
+            });
+        });
+
+        $('#data_1 .input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true,
+            format: "dd/mm/yyyy"
+        });
+
+        function allReports(opcion) {
+            var _fechita = $("#fecha").val();
+            var _opcion = opcion;
+            //alert("La fecha es: " + _fechita + " Opcion: " + _opcion);
+
+            if (opcion == 1) {
+                location.href = '@Url.Action("allEgos","ImpresionQuimica")' + '?id=' + opcion + '&fechaAll='+ _fechita;
+            }
+
+            if (opcion == 2) {
+                location.href = '@Url.Action("allBHs","ImpresionQuimica")' + '?id=' + opcion + '&fechaAll='+ _fechita;
+            }
+
+            if (opcion == 3) {
+                location.href = '@Url.Action("allQS","ImpresionQuimica")' + '?id=' + opcion + '&fechaAll='+ _fechita;
+            }
+
+            if (opcion == 4) {
+                location.href = '@Url.Action("allTOX", "ImpresionQuimica")' + '?id=' + opcion + '&fechaAll=' + _fechita;
+            }
+        }
+
+    </script>
+}
