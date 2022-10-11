@@ -2138,5 +2138,601 @@ namespace MedToxQui.Controllers
 
 			return new FileStreamResult(msCad, "application/pdf");
 		}
-	}
+
+		public IActionResult cadenaCustodiaIndividual(int idhistorico)
+		{
+			var datosC3 = repo.Get<ConsultasModel>("sp_general_obtener_certificacion_acreditacion").FirstOrDefault();
+			var cadenaIndividual = repo.Getdosparam1<ConsultasModel>("sp_medicos_rep_cabeceras_idhistorico", new { @idhistorico = idhistorico }).FirstOrDefault();
+
+            var fonEiqueta = FontFactory.GetFont("Arial", 10, Font.BOLD, BaseColor.BLACK);
+            var fontDato = FontFactory.GetFont("Arial", 10, Font.NORMAL, BaseColor.BLACK);
+            var fontDatosmall = FontFactory.GetFont("Arial", 9, Font.NORMAL, BaseColor.BLACK);
+
+            var fontDatosCelda = FontFactory.GetFont("Arial", 8, Font.NORMAL, BaseColor.BLACK);
+
+            MemoryStream msCad = new MemoryStream();
+            Document docCadena = new Document(PageSize.LETTER, 30f, 20f, 20f, 40f);
+            PdfWriter pwCadena = PdfWriter.GetInstance(docCadena, msCad);
+            docCadena.Open();
+
+            #region encabezado
+            string imageizq = @"C:/inetpub/wwwroot/fotoUser/gobedohor.png";
+            iTextSharp.text.Image jpgSupIzq = iTextSharp.text.Image.GetInstance(imageizq);
+            jpgSupIzq.ScaleToFit(80f, 80f);
+
+            PdfPCell clLogoSupIzq = new PdfPCell();
+            clLogoSupIzq.BorderWidth = 0;
+            clLogoSupIzq.VerticalAlignment = Element.ALIGN_BOTTOM;
+            clLogoSupIzq.AddElement(jpgSupIzq);
+
+            string imageder = @"C:/inetpub/wwwroot/fotoUser/nuevoCeccc.png";
+            iTextSharp.text.Image jpgSupDer = iTextSharp.text.Image.GetInstance(imageder);
+            jpgSupDer.Alignment = iTextSharp.text.Image.ALIGN_RIGHT;
+            jpgSupDer.ScaleToFit(100f, 100f);
+
+            PdfPCell clLogoSupDer = new PdfPCell();
+            clLogoSupDer.BorderWidth = 0;
+            clLogoSupDer.VerticalAlignment = Element.ALIGN_BOTTOM;
+            clLogoSupDer.AddElement(jpgSupDer);
+
+            Chunk chkTit = new Chunk("Dirección Médica y Toxicológica", new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 12f, iTextSharp.text.Font.BOLD, BaseColor.BLACK));
+            Paragraph paragraph = new Paragraph();
+            paragraph.Alignment = Element.ALIGN_CENTER;
+            paragraph.Add(chkTit);
+
+            Chunk chkSub = new Chunk("Cadena de Custodia", new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 11f, iTextSharp.text.Font.BOLD, BaseColor.BLACK));
+            Paragraph paragraph1 = new Paragraph();
+            paragraph1.Alignment = Element.ALIGN_CENTER;
+            paragraph1.Add(chkSub);
+
+            PdfPCell clTitulo = new PdfPCell();
+            clTitulo.BorderWidth = 0;
+            clTitulo.AddElement(paragraph);
+
+            PdfPCell clSubTit = new PdfPCell();
+            clSubTit.BorderWidth = 0;
+            clSubTit.AddElement(paragraph1);
+
+            PdfPTable tblTitulo = new PdfPTable(1);
+            tblTitulo.WidthPercentage = 100;
+            tblTitulo.AddCell(clTitulo);
+            tblTitulo.AddCell(clSubTit);
+
+            PdfPCell clTablaTitulo = new PdfPCell();
+            clTablaTitulo.BorderWidth = 0;
+            clTablaTitulo.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clTablaTitulo.AddElement(tblTitulo);
+
+            PdfPTable tblEncabezado = new PdfPTable(3);
+            tblEncabezado.WidthPercentage = 100;
+            float[] widths = new float[] { 20f, 60f, 20f };
+            tblEncabezado.SetWidths(widths);
+
+            tblEncabezado.AddCell(clLogoSupIzq);
+            tblEncabezado.AddCell(clTablaTitulo);
+            tblEncabezado.AddCell(clLogoSupDer);
+
+            docCadena.Add(tblEncabezado);
+            #endregion
+
+            #region emision - revision - codigo
+            Paragraph paragraphemision = new Paragraph(new Phrase("EMISION", fonEiqueta));
+            paragraphemision.Alignment = Element.ALIGN_CENTER;
+
+            PdfPCell clEmision = new PdfPCell();
+            clEmision.BorderWidth = 0;
+            clEmision.AddElement(paragraphemision);
+
+            Paragraph paragrarevision = new Paragraph(new Phrase("REVISION", fonEiqueta));
+            paragrarevision.Alignment = Element.ALIGN_CENTER;
+
+            PdfPCell clrevision = new PdfPCell();
+            clrevision.BorderWidth = 0;
+            clrevision.AddElement(paragrarevision);
+
+            Paragraph paragracodigo = new Paragraph(new Phrase("CODIGO", fonEiqueta));
+            paragracodigo.Alignment = Element.ALIGN_LEFT;
+
+            PdfPCell clcodigo = new PdfPCell();
+            clcodigo.BorderWidth = 0;
+            clcodigo.AddElement(paragracodigo);
+
+            Paragraph paragraphemision_b = new Paragraph(new Phrase(DateTime.Now.Year.ToString(), fonEiqueta));
+            paragraphemision_b.Alignment = Element.ALIGN_CENTER;
+
+            PdfPCell clEmision_b = new PdfPCell();
+            clEmision_b.BorderWidth = 0;
+            clEmision_b.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clEmision_b.UseAscender = true;
+            clEmision_b.AddElement(paragraphemision_b);
+
+            Paragraph paragrarevision_b = new Paragraph(new Phrase("1.1", fonEiqueta));
+            paragrarevision_b.Alignment = Element.ALIGN_CENTER;
+
+            PdfPCell clrevision_b = new PdfPCell();
+            clrevision_b.BorderWidth = 0;
+            clrevision_b.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clrevision_b.UseAscender = true;
+            clrevision_b.AddElement(paragrarevision_b);
+
+            Paragraph paragracodigo_b = new Paragraph(new Phrase("CECCC/DMT/06", fonEiqueta));
+            paragracodigo_b.Alignment = Element.ALIGN_LEFT;
+
+            PdfPCell clcodigo_b = new PdfPCell();
+            clcodigo_b.BorderWidth = 0;
+            clcodigo_b.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clcodigo_b.UseAscender = true;
+            clcodigo_b.AddElement(paragracodigo_b);
+
+            PdfPCell clLinea = new PdfPCell(new Phrase("", fontDato)) { Colspan = 3 };
+            clLinea.BorderWidthBottom = 1;
+            clLinea.BorderWidthTop = 0;
+            clLinea.BorderWidthLeft = 0;
+            clLinea.BorderWidthRight = 0;
+
+            PdfPTable tblemision = new PdfPTable(3);
+            tblemision.WidthPercentage = 100;
+            float[] widthsemision = new float[] { 33f, 34f, 33f };
+            tblemision.SetWidths(widthsemision);
+
+            tblemision.AddCell(clLinea);
+
+            tblemision.AddCell(clEmision);
+            tblemision.AddCell(clrevision);
+            tblemision.AddCell(clcodigo);
+
+            tblemision.AddCell(clEmision_b);
+            tblemision.AddCell(clrevision_b);
+            tblemision.AddCell(clcodigo_b);
+
+            docCadena.Add(tblemision);
+            #endregion
+
+            //Byte[] _laFoto = (Byte[])cadenas[id].laFoto;
+            Byte[] _laFoto = (Byte[])cadenaIndividual.laFoto;
+            iTextSharp.text.Image _laFotita = iTextSharp.text.Image.GetInstance(_laFoto);
+            _laFotita.ScalePercent(45f);
+
+            Paragraph derecha = new Paragraph();
+            derecha.Alignment = Element.ALIGN_RIGHT;
+
+            _laFotita.SetAbsolutePosition(520f, 645f);
+            derecha.Add(_laFotita);
+            docCadena.Add(derecha);
+
+            Paragraph laFecha = new Paragraph(new Phrase("Tuxtla Gutiérrez; Chiapas a " + DateTime.Now.ToString("dd MMMM yyyy"), fontDato));
+            laFecha.Alignment = Element.ALIGN_LEFT;
+            laFecha.Add(Chunk.NEWLINE);
+            docCadena.Add(laFecha);
+
+            Paragraph DatosPersonales = new Paragraph(new Phrase("Datos personales ", fonEiqueta));
+            DatosPersonales.Alignment = Element.ALIGN_LEFT;
+            DatosPersonales.Add(Chunk.NEWLINE);
+            docCadena.Add(DatosPersonales);
+
+            #region tabla datos personales
+            PdfPTable tblDatosPersonales = new PdfPTable(6)
+            {
+                TotalWidth = 560,
+                LockedWidth = true
+            };
+
+            float[] valuesDatosPersonales = new float[6] { 120, 90, 90, 80, 90, 90 };
+            tblDatosPersonales.SetWidths(valuesDatosPersonales);
+            tblDatosPersonales.HorizontalAlignment = 0;
+            tblDatosPersonales.SpacingBefore = 5f;
+            tblDatosPersonales.SpacingAfter = 5f;
+            tblDatosPersonales.DefaultCell.Border = 0;
+
+            PdfPCell clNombre = new PdfPCell(new Phrase("Nombre:", fonEiqueta));
+            clNombre.BorderWidth = 0;
+            clNombre.HorizontalAlignment = Element.ALIGN_LEFT;
+            clNombre.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clNombre.UseAscender = true;
+            clNombre.FixedHeight = 20f;
+
+            PdfPCell clNombreDato = new PdfPCell(new Phrase(cadenaIndividual.evaluado, fontDato)) { Colspan = 5 };
+            clNombreDato.BorderWidthBottom = 1;
+            clNombreDato.BorderWidthLeft = 0;
+            clNombreDato.BorderWidthRight = 0;
+            clNombreDato.BorderWidthTop = 0;
+            clNombreDato.HorizontalAlignment = Element.ALIGN_LEFT;
+            clNombreDato.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clNombreDato.UseAscender = true;
+
+            PdfPCell clRfc = new PdfPCell(new Phrase("RFC:", fonEiqueta));
+            clRfc.BorderWidth = 0;
+            clRfc.HorizontalAlignment = Element.ALIGN_LEFT;
+            clRfc.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clRfc.UseAscender = true;
+            clRfc.FixedHeight = 20f;
+
+            PdfPCell clRFCDatos = new PdfPCell(new Phrase(cadenaIndividual.rfc, fontDato));
+            clRFCDatos.BorderWidthBottom = 1;
+            clRFCDatos.BorderWidthLeft = 0;
+            clRFCDatos.BorderWidthRight = 0;
+            clRFCDatos.BorderWidthTop = 0;
+            clRFCDatos.HorizontalAlignment = Element.ALIGN_CENTER;
+            clRFCDatos.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clRFCDatos.UseAscender = true;
+
+            PdfPCell clEdad = new PdfPCell(new Phrase("Edad:", fonEiqueta));
+            clEdad.BorderWidth = 0;
+            clEdad.HorizontalAlignment = Element.ALIGN_CENTER;
+            clEdad.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clEdad.UseAscender = true;
+
+            PdfPCell clEdadDatos = new PdfPCell(new Phrase(cadenaIndividual.edad.ToString(), fontDato));
+            clEdadDatos.BorderWidthBottom = 1;
+            clEdadDatos.BorderWidthLeft = 0;
+            clEdadDatos.BorderWidthRight = 0;
+            clEdadDatos.BorderWidthTop = 0;
+            clEdadDatos.HorizontalAlignment = Element.ALIGN_CENTER;
+            clEdadDatos.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clEdadDatos.UseAscender = true;
+
+            PdfPCell clGenero = new PdfPCell(new Phrase("Género:", fonEiqueta));
+            clGenero.BorderWidth = 0;
+            clGenero.HorizontalAlignment = Element.ALIGN_CENTER;
+            clGenero.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clGenero.UseAscender = true;
+
+            PdfPCell clGeneroDatos = new PdfPCell(new Phrase(cadenaIndividual.sexo, fontDato));
+            clGeneroDatos.BorderWidthBottom = 1;
+            clGeneroDatos.BorderWidthLeft = 0;
+            clGeneroDatos.BorderWidthRight = 0;
+            clGeneroDatos.BorderWidthTop = 0;
+            clGeneroDatos.HorizontalAlignment = Element.ALIGN_CENTER;
+            clGeneroDatos.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clGeneroDatos.UseAscender = true;
+
+            PdfPCell clDependencia = new PdfPCell(new Phrase("Dependencia:", fonEiqueta));
+            clDependencia.BorderWidth = 0;
+            clDependencia.HorizontalAlignment = Element.ALIGN_LEFT;
+            clDependencia.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clDependencia.UseAscender = true;
+            clDependencia.FixedHeight = 20f;
+
+            PdfPCell clDependenciaDato = new PdfPCell(new Phrase(cadenaIndividual.dependencia, fontDato)) { Colspan = 5 };
+            clDependenciaDato.BorderWidthBottom = 1;
+            clDependenciaDato.BorderWidthLeft = 0;
+            clDependenciaDato.BorderWidthRight = 0;
+            clDependenciaDato.BorderWidthTop = 0;
+            clDependenciaDato.HorizontalAlignment = Element.ALIGN_LEFT;
+            clDependenciaDato.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clDependenciaDato.UseAscender = true;
+
+            PdfPCell clPuesto = new PdfPCell(new Phrase("Puesto:", fonEiqueta));
+            clPuesto.BorderWidth = 0;
+            clPuesto.HorizontalAlignment = Element.ALIGN_LEFT;
+            clPuesto.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clPuesto.UseAscender = true;
+            clPuesto.FixedHeight = 20f;
+
+            PdfPCell clPuestoDato = new PdfPCell(new Phrase(cadenaIndividual.puesto, fontDato)) { Colspan = 5 };
+            clPuestoDato.BorderWidthBottom = 1;
+            clPuestoDato.BorderWidthLeft = 0;
+            clPuestoDato.BorderWidthRight = 0;
+            clPuestoDato.BorderWidthTop = 0;
+            clPuestoDato.HorizontalAlignment = Element.ALIGN_LEFT;
+            clPuestoDato.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clPuestoDato.UseAscender = true;
+
+            PdfPCell clEvaluacion = new PdfPCell(new Phrase("Tipo de evaluación:", fonEiqueta));
+            clEvaluacion.BorderWidth = 0;
+            clEvaluacion.HorizontalAlignment = Element.ALIGN_LEFT;
+            clEvaluacion.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clEvaluacion.UseAscender = true;
+            clEvaluacion.FixedHeight = 20f;
+
+            PdfPCell clEvaluacionDato = new PdfPCell(new Phrase(cadenaIndividual.evaluacion, fontDato)) { Colspan = 5 };
+            clEvaluacionDato.BorderWidthBottom = 1;
+            clEvaluacionDato.BorderWidthLeft = 0;
+            clEvaluacionDato.BorderWidthRight = 0;
+            clEvaluacionDato.BorderWidthTop = 0;
+            clEvaluacionDato.HorizontalAlignment = Element.ALIGN_LEFT;
+            clEvaluacionDato.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clEvaluacionDato.UseAscender = true;
+
+            PdfPCell clLugar = new PdfPCell(new Phrase("Lugar de evaluación:", fonEiqueta));
+            clLugar.BorderWidth = 0;
+            clLugar.HorizontalAlignment = Element.ALIGN_LEFT;
+            clLugar.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clLugar.UseAscender = true;
+            clLugar.FixedHeight = 20f;
+
+            PdfPCell clLugarDato = new PdfPCell(new Phrase("CENTRO ESTATAL DE CONTROL DE CONFIANZA CERTIFICADO", fontDato)) { Colspan = 5 };
+            clLugarDato.BorderWidthBottom = 1;
+            clLugarDato.BorderWidthLeft = 0;
+            clLugarDato.BorderWidthRight = 0;
+            clLugarDato.BorderWidthTop = 0;
+            clLugarDato.HorizontalAlignment = Element.ALIGN_LEFT;
+            clLugarDato.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clLugarDato.UseAscender = true;
+
+            tblDatosPersonales.AddCell(clNombre);
+            tblDatosPersonales.AddCell(clNombreDato);
+
+            tblDatosPersonales.AddCell(clRfc);
+            tblDatosPersonales.AddCell(clRFCDatos);
+            tblDatosPersonales.AddCell(clEdad);
+            tblDatosPersonales.AddCell(clEdadDatos);
+            tblDatosPersonales.AddCell(clGenero);
+            tblDatosPersonales.AddCell(clGeneroDatos);
+
+            tblDatosPersonales.AddCell(clDependencia);
+            tblDatosPersonales.AddCell(clDependenciaDato);
+
+            tblDatosPersonales.AddCell(clLugar);
+            tblDatosPersonales.AddCell(clLugarDato);
+
+            tblDatosPersonales.AddCell(clEvaluacion);
+            tblDatosPersonales.AddCell(clEvaluacionDato);
+
+            tblDatosPersonales.AddCell(clPuesto);
+            tblDatosPersonales.AddCell(clPuestoDato);
+
+            docCadena.Add(tblDatosPersonales);
+            #endregion
+
+            Paragraph temAna = new Paragraph(new Phrase("TEMPERATURA:________________________           ANALITO:_______________________________________________", fontDato));
+            temAna.Alignment = Element.ALIGN_LEFT;
+            docCadena.Add(temAna);
+
+            #region cadena
+            PdfPTable tblCadCus = new PdfPTable(4)
+            {
+                TotalWidth = 560,
+                LockedWidth = true
+            };
+            float[] valCadCus = new float[4] { 100, 90, 185, 185 };
+            tblCadCus.SetWidths(valCadCus);
+            //tblCadCus.HorizontalAlignment = 0;
+            tblCadCus.SpacingBefore = 5f;
+            tblCadCus.SpacingAfter = 5f;
+            tblCadCus.DefaultCell.Border = 1;
+
+            //--------------------------------------------------------------------------------------- 1a Linea : Titulos
+            PdfPCell clFecha = new PdfPCell(new Phrase("FECHA, HORA Y LUGAR", fontDatosCelda));
+            clFecha.HorizontalAlignment = Element.ALIGN_CENTER;
+            clFecha.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clFecha.UseAscender = true;
+            clFecha.FixedHeight = 15f;
+            tblCadCus.AddCell(clFecha);
+
+            PdfPCell clActividad = new PdfPCell(new Phrase("ACTIVIDAD", fontDatosCelda));
+            clActividad.HorizontalAlignment = Element.ALIGN_CENTER;
+            clActividad.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clActividad.UseAscender = true;
+            tblCadCus.AddCell(clActividad);
+
+            PdfPCell clEntrega = new PdfPCell(new Phrase("QUIEN ENTREGA", fontDatosCelda));
+            clEntrega.HorizontalAlignment = Element.ALIGN_CENTER;
+            clEntrega.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clEntrega.UseAscender = true;
+            tblCadCus.AddCell(clEntrega);
+
+            PdfPCell clRecibe = new PdfPCell(new Phrase("QUIEN RECIBE", fontDatosCelda));
+            clRecibe.HorizontalAlignment = Element.ALIGN_CENTER;
+            clRecibe.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clRecibe.UseAscender = true;
+            tblCadCus.AddCell(clRecibe);
+
+            //--------------------------------------------------------------------------------------- 2 Linea
+            PdfPCell clFecha_b = new PdfPCell();
+            clFecha_b.AddElement(new Phrase("SANITARIO", fontDatosCelda));
+            clFecha_b.AddElement(new Phrase("FECHA:____________", fontDatosCelda));
+            clFecha_b.AddElement(new Phrase("HORA:_____________", fontDatosCelda));
+            clFecha_b.HorizontalAlignment = Element.ALIGN_LEFT;
+            clFecha_b.FixedHeight = 50f;
+            tblCadCus.AddCell(clFecha_b);
+
+            PdfPCell clActividad_b = new PdfPCell(new Phrase("RECOLECCION DE LA MUESTRA", fontDatosCelda));
+            clActividad_b.HorizontalAlignment = Element.ALIGN_CENTER;
+            clActividad_b.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clActividad_b.UseAscender = true;
+            tblCadCus.AddCell(clActividad_b);
+
+            PdfPCell clEntrega_b = new PdfPCell(new Phrase(cadenaIndividual.evaluado + "\nNOMBRE Y FIRMA DEL EVALUADO", fontDatosCelda));
+            clEntrega_b.HorizontalAlignment = Element.ALIGN_CENTER;
+            clEntrega_b.VerticalAlignment = Element.ALIGN_BOTTOM;
+            tblCadCus.AddCell(clEntrega_b);
+
+            PdfPCell clRecibe_b = new PdfPCell(new Phrase(cadenaIndividual.userquim + "\nNOMBRE Y FIRMA DEL SUPERVISOR OCULAR", fontDatosCelda));
+            clRecibe_b.VerticalAlignment = Element.ALIGN_BOTTOM;
+            clRecibe_b.HorizontalAlignment = Element.ALIGN_CENTER;
+            tblCadCus.AddCell(clRecibe_b);
+
+            //--------------------------------------------------------------------------------------- 3 Linea
+            PdfPCell clFecha_c = new PdfPCell();
+            clFecha_c.AddElement(new Phrase("LABORATORIO", fontDatosCelda));
+            clFecha_c.AddElement(new Phrase("FECHA:____________", fontDatosCelda));
+            clFecha_c.AddElement(new Phrase("HORA:____________", fontDatosCelda));
+            clFecha_c.HorizontalAlignment = Element.ALIGN_LEFT;
+            clFecha_c.FixedHeight = 50f;
+            tblCadCus.AddCell(clFecha_c);
+
+            PdfPCell clActividad_c = new PdfPCell(new Phrase("ENTREGA DE LA MUESTRA", fontDatosCelda));
+            clActividad_c.HorizontalAlignment = Element.ALIGN_CENTER;
+            clActividad_c.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clActividad_c.UseAscender = true;
+            tblCadCus.AddCell(clActividad_c);
+
+            PdfPCell clEntrega_c = new PdfPCell(new Phrase(cadenaIndividual.userquim + "\nNOMBRE Y FIRMA DEL SUPERVISOR OCULAR", fontDatosCelda));
+            clEntrega_c.HorizontalAlignment = Element.ALIGN_CENTER;
+            clEntrega_c.VerticalAlignment = Element.ALIGN_BOTTOM;
+            tblCadCus.AddCell(clEntrega_c);
+
+            PdfPCell clRecibe_c = new PdfPCell(new Phrase(cadenaIndividual.usertox + "\nNOMBRE Y FIRMA DEL ANALISTA", fontDatosCelda));
+            clRecibe_c.VerticalAlignment = Element.ALIGN_BOTTOM;
+            clRecibe_c.HorizontalAlignment = Element.ALIGN_CENTER;
+            tblCadCus.AddCell(clRecibe_c);
+
+            //--------------------------------------------------------------------------------------- 4 Linea
+            PdfPCell clFecha_d = new PdfPCell();
+            clFecha_d.AddElement(new Phrase("LABORATORIO", fontDatosCelda));
+            clFecha_d.AddElement(new Phrase("FECHA:____________", fontDatosCelda));
+            clFecha_d.AddElement(new Phrase("HORA:____________", fontDatosCelda));
+            clFecha_d.HorizontalAlignment = Element.ALIGN_LEFT;
+            clFecha_d.FixedHeight = 50f;
+            tblCadCus.AddCell(clFecha_d);
+
+            PdfPCell clActividad_d = new PdfPCell(new Phrase("ENTREGA PARA EL RESGUARDO DE LA MUESTRA", fontDatosCelda));
+            clActividad_d.HorizontalAlignment = Element.ALIGN_CENTER;
+            clActividad_d.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clActividad_d.UseAscender = true;
+            tblCadCus.AddCell(clActividad_d);
+
+            PdfPCell clEntrega_d = new PdfPCell(new Phrase(cadenaIndividual.usertox + "\nNOMBRE Y FIRMA DEL ANALISTA", fontDatosCelda));
+            clEntrega_d.HorizontalAlignment = Element.ALIGN_CENTER;
+            clEntrega_d.VerticalAlignment = Element.ALIGN_BOTTOM;
+            tblCadCus.AddCell(clEntrega_d);
+
+            PdfPCell clRecibe_d = new PdfPCell(new Phrase("______________________________________\nNOMBRE Y FIRMA DE QUIEN RESGUARDA LA MUESTRA", fontDatosCelda));
+            clRecibe_d.VerticalAlignment = Element.ALIGN_BOTTOM;
+            clRecibe_d.HorizontalAlignment = Element.ALIGN_CENTER;
+            tblCadCus.AddCell(clRecibe_d);
+
+            //--------------------------------------------------------------------------------------- 5 Linea
+            PdfPCell clFecha_e = new PdfPCell();
+            clFecha_e.AddElement(new Phrase("LABORATORIO", fontDatosCelda));
+            clFecha_e.AddElement(new Phrase("FECHA:____________", fontDatosCelda));
+            clFecha_e.AddElement(new Phrase("HORA:____________", fontDatosCelda));
+            clFecha_e.HorizontalAlignment = Element.ALIGN_LEFT;
+            clFecha_e.FixedHeight = 50f;
+            tblCadCus.AddCell(clFecha_e);
+
+            PdfPCell clActividad_e = new PdfPCell(new Phrase("ENTREGA DE LA MUESTRA PARA EL ENVIO A ESTUDIO CONFIRMATORIO", fontDatosCelda));
+            clActividad_e.HorizontalAlignment = Element.ALIGN_CENTER;
+            clActividad_e.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clActividad_e.UseAscender = true;
+            tblCadCus.AddCell(clActividad_e);
+
+            PdfPCell clEntrega_e = new PdfPCell(new Phrase("______________________________________\nNOMBRE Y FIRMA DE QUIEN RESGUARDA LA MUESTRA", fontDatosCelda));
+            clEntrega_e.HorizontalAlignment = Element.ALIGN_CENTER;
+            clEntrega_e.VerticalAlignment = Element.ALIGN_BOTTOM;
+            tblCadCus.AddCell(clEntrega_e);
+
+            PdfPCell clRecibe_e = new PdfPCell(new Phrase("______________________________________\nNOMBRE Y FIRMA DE QUIEN LLEVA LA MUESTRA", fontDatosCelda));
+            clRecibe_e.VerticalAlignment = Element.ALIGN_BOTTOM;
+            clRecibe_e.HorizontalAlignment = Element.ALIGN_CENTER;
+            tblCadCus.AddCell(clRecibe_e);
+
+            //--------------------------------------------------------------------------------------- 6 Linea
+            PdfPCell clFecha_f = new PdfPCell();
+            clFecha_f.AddElement(new Phrase("LABORATORIO", fontDatosCelda));
+            clFecha_f.AddElement(new Phrase("FECHA:____________", fontDatosCelda));
+            clFecha_f.AddElement(new Phrase("HORA:____________", fontDatosCelda));
+            clFecha_f.HorizontalAlignment = Element.ALIGN_LEFT;
+            clFecha_f.FixedHeight = 50f;
+            tblCadCus.AddCell(clFecha_f);
+
+            PdfPCell clActividad_f = new PdfPCell(new Phrase("ENTREGA DE MUESTRAS PARA EL ESTUDIO CONFIRMATORIO", fontDatosCelda));
+            clActividad_f.HorizontalAlignment = Element.ALIGN_CENTER;
+            clActividad_f.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clActividad_f.UseAscender = true;
+            tblCadCus.AddCell(clActividad_f);
+
+            PdfPCell clEntrega_f = new PdfPCell(new Phrase("______________________________________\nNOMBRE Y FIRMA DE QUIEN LLEVA LA MUESTRA", fontDatosCelda));
+            clEntrega_f.HorizontalAlignment = Element.ALIGN_CENTER;
+            clEntrega_f.VerticalAlignment = Element.ALIGN_BOTTOM;
+            tblCadCus.AddCell(clEntrega_f);
+
+            PdfPCell clRecibe_f = new PdfPCell(new Phrase("______________________________________\nNOMBRE Y FIRMA DE REPRESENTANTE DEL LABORATORIO CONFIRMATORIO", fontDatosCelda));
+            clRecibe_f.VerticalAlignment = Element.ALIGN_BOTTOM;
+            clRecibe_f.HorizontalAlignment = Element.ALIGN_CENTER;
+            tblCadCus.AddCell(clRecibe_f);
+
+            //--------------------------------------------------------------------------------------- 7 Linea
+            PdfPCell clFecha_h = new PdfPCell();
+            clFecha_h.AddElement(new Phrase("LABORATORIO", fontDatosCelda));
+            clFecha_h.AddElement(new Phrase("FECHA:____________", fontDatosCelda));
+            clFecha_h.AddElement(new Phrase("HORA:____________", fontDatosCelda));
+            clFecha_h.HorizontalAlignment = Element.ALIGN_LEFT;
+            clFecha_h.FixedHeight = 50f;
+            tblCadCus.AddCell(clFecha_h);
+
+            PdfPCell clActividad_h = new PdfPCell(new Phrase("RECEPCION DE RESULTADOS", fontDatosCelda));
+            clActividad_h.HorizontalAlignment = Element.ALIGN_CENTER;
+            clActividad_h.VerticalAlignment = Element.ALIGN_MIDDLE;
+            clActividad_h.UseAscender = true;
+            tblCadCus.AddCell(clActividad_h);
+
+            PdfPCell clEntrega_h = new PdfPCell(new Phrase("______________________________________\nNOMBRE Y FIRMA DE REPRESENTANTE DEL LABORATORIO CONFIRMATORIO", fontDatosCelda));
+            clEntrega_h.HorizontalAlignment = Element.ALIGN_CENTER;
+            clEntrega_h.VerticalAlignment = Element.ALIGN_BOTTOM;
+            tblCadCus.AddCell(clEntrega_h);
+
+            PdfPCell clRecibe_h = new PdfPCell(new Phrase("______________________________________\nNOMBRE Y FIRMA DE QUIEN RECIBE RESULTADOS CONFIRMATORIOS", fontDatosCelda));
+            clRecibe_h.VerticalAlignment = Element.ALIGN_BOTTOM;
+            clRecibe_h.HorizontalAlignment = Element.ALIGN_CENTER;
+            tblCadCus.AddCell(clRecibe_h);
+
+            docCadena.Add(tblCadCus);
+            #endregion
+
+            #region Resultados - observaciones
+            Paragraph resObs = new Paragraph();
+            resObs.Add(new Phrase("Resultado de adulterantes en orina: _______________________________________________________________________", fontDato));
+            resObs.Add(Chunk.NEWLINE);
+            resObs.Add(new Phrase("OBSERVACIONES ____________________________________________________________________________________", fontDato));
+            resObs.Add(Chunk.NEWLINE);
+            resObs.Add(new Phrase("____________________________________________________________________________________________________", fontDato));
+            resObs.Alignment = Element.ALIGN_LEFT;
+
+            docCadena.Add(resObs);
+            #endregion
+
+            #region Resultados - observaciones
+            Paragraph finCus = new Paragraph();
+            finCus.Add(new Phrase("Este formato acompañara a la muestra en todo momento, toda persona que la maneje deberá llenar los espacios correspondientes del formato.", fontDatosCelda));
+            finCus.Add(Chunk.NEWLINE);
+            finCus.Add(new Phrase("Este formato se sustenta en el de emisión de resultados CECCC/CMT/04", fontDatosCelda));
+            finCus.Alignment = Element.ALIGN_LEFT;
+
+            docCadena.Add(finCus);
+            #endregion
+
+            #region final centro
+            Paragraph finCusCentro = new Paragraph(new Phrase("ESTE FORMATO ES DE CARÁCTER CONFIDENCIAL.", fontDatosCelda));
+            finCusCentro.Alignment = Element.ALIGN_CENTER;
+            docCadena.Add(finCusCentro);
+            #endregion
+
+            #region finfinal
+            PdfPTable fin = new PdfPTable(2)
+            {
+                TotalWidth = 560,
+                LockedWidth = true
+            };
+            float[] final = new float[2] { 280, 280 };
+            fin.SetWidths(final);
+            fin.HorizontalAlignment = 0;
+            fin.SpacingBefore = 10f;
+            fin.SpacingAfter = 5f;
+            fin.DefaultCell.Border = 0;
+
+            PdfPCell clfolio = new PdfPCell(new Phrase(cadenaIndividual.folio, fonEiqueta));
+            clfolio.BorderWidth = 0;
+            clfolio.HorizontalAlignment = Element.ALIGN_LEFT;
+
+            PdfPCell clCodigo_c = new PdfPCell(new Phrase(cadenaIndividual.codigoevaluado, fonEiqueta));
+            clCodigo_c.BorderWidth = 0;
+            clCodigo_c.HorizontalAlignment = Element.ALIGN_RIGHT;
+
+            fin.AddCell(clfolio);
+            fin.AddCell(clCodigo_c);
+
+            docCadena.Add(fin);
+            #endregion
+
+            docCadena.Close();
+            byte[] byteStream = msCad.ToArray();
+            msCad = new MemoryStream();
+            msCad.Write(byteStream, 0, byteStream.Length);
+            msCad.Position = 0;
+
+            return new FileStreamResult(msCad, "application/pdf");
+        }
+    }
 }

@@ -200,7 +200,7 @@
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     @*<i class="fa fa-calendar modal-icon"></i>*@
                     <h4 class="modal-title">Examen General de Orina</h4>
-                    <small class="font-bold">EGO</small>
+                    <small class="font-bold">EGO - <label id="Fol" name="Fol">F:</label></small>
                 </div>
 
                 <div class="modal-body">
@@ -336,7 +336,7 @@
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     @*<i class="fa fa-calendar modal-icon"></i>*@
                     <h4 class="modal-title">Biometría Hemática</h4>
-                    <small class="font-bold">BH</small>
+                    <small class="font-bold">BH - <label id="Folbh" name="Folbh">F:</label></small>
                 </div>
 
                 <div class="modal-body">
@@ -507,7 +507,7 @@
 
                     <h4 class="modal-title">Química Sanguínea</h4>
 
-                    <small class="font-bold">QS</small>
+                    <small class="font-bold">QS - <label id="Folqs" name="Folqs">F:</label></small>
 
                 </div>
 
@@ -700,7 +700,7 @@
 
                     <h4 class="modal-title">Evaluación Toxicológica</h4>
 
-                    <small class="font-bold">TX</small>
+                    <small class="font-bold">TX - <label id="Foltx" name="Foltx">F:</label></small>
 
                 </div>
 
@@ -1047,8 +1047,9 @@
             //alert(IdH + " "+ action);
             $('#idHistorico').val(IdH);
             $("#accion").val(action);
-            $("#folio").val(folio);
+            $("#folio").val(folio);           
             $("#modalEgo").modal('show');
+            $("#Fol").text($("#folio").val());
 
             if (action == 1) {       // Nuevo registro en EGO
                 limpiarEgo();
@@ -1225,6 +1226,7 @@
             $("#accion").val(action);
             $("#folio").val(folio);
             $("#modalBH").modal('show');
+            $("#Folbh").text($("#folio").val());
 
             if (action == 1) {
                 limpiarBh();
@@ -1365,6 +1367,7 @@
             $("#accion").val(action);
             $("#folio").val(folio);
             $("#modalQS").modal('show');
+            $("#Folqs").text($("#folio").val());
 
             if (action == 1) {
                 limpiarQS();
@@ -1466,6 +1469,7 @@
             $("#accion").val(action);
             $("#folio").val(folio);
             $("#modalTOX").modal('show');
+            $("#Foltx").text($("#folio").val());
 
             if (action == 1) {
                 limpiarTOX();

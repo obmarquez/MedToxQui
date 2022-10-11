@@ -7620,6 +7620,9 @@ namespace MedToxQui.Controllers
                 }
 
                 docListaOcular.Add(tbSublLista);
+
+                docListaOcular.NewPage();
+
             }
             #endregion
 

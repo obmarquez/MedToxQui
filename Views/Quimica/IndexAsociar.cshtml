@@ -39,6 +39,7 @@
                                         <th>FPE</th>
                                         <th>Gaf</th>
                                         <th>Gpo</th>
+                                        <th>CC</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -55,6 +56,9 @@
                                             <td>@Html.DisplayFor(modelITem => item.fechaCus)</td>
                                             <td>@Html.DisplayFor(modelITem => item.gafete)</td>
                                             <td>@Html.DisplayFor(modelITem => item.grupo)</td>
+                                            <td>
+                                                <a class="popup btn btn-block btn-outline btn-success btn-xs" href="@Url.Action("cadenaCustodiaIndividual","ImpresionAceptaciones", new { idhistorico = item.idhistorico })" target="_blank">CCI</a>
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>
