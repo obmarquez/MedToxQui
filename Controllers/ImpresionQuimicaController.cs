@@ -7482,12 +7482,12 @@ namespace MedToxQui.Controllers
 
                 docListaOcular.Add(nombreOdo);
 
-                PdfPTable tblLista = new PdfPTable(6)
+                PdfPTable tblLista = new PdfPTable(7)
                 {
                     TotalWidth = 560,
                     LockedWidth = true
                 };
-                float[] valuesLista = new float[6] { 50, 180, 100, 150, 30, 50 };
+                float[] valuesLista = new float[7] { 50, 30, 170, 100, 130, 30, 50 };
                 tblLista.SetWidths(valuesLista);
                 tblLista.HorizontalAlignment = 0;
                 tblLista.SpacingBefore = 5f;
@@ -7500,6 +7500,12 @@ namespace MedToxQui.Controllers
                 clHola.VerticalAlignment = Element.ALIGN_MIDDLE;
                 clHola.UseAscender = true;
                 clHola.FixedHeight = 20f;
+
+                PdfPCell clConsecutivo = new PdfPCell(new Phrase("NUM", fonEiqueta));
+                clConsecutivo.BorderWidth = 1;
+                clConsecutivo.HorizontalAlignment = Element.ALIGN_CENTER;
+                clConsecutivo.VerticalAlignment = Element.ALIGN_MIDDLE;
+                clConsecutivo.UseAscender = true;
 
                 PdfPCell clEvaluado = new PdfPCell(new Phrase("EVALUADO", fonEiqueta));
                 clEvaluado.BorderWidth = 1;
@@ -7532,6 +7538,7 @@ namespace MedToxQui.Controllers
                 clTc.UseAscender = true;
 
                 tblLista.AddCell(clHola);
+                tblLista.AddCell(clConsecutivo);
                 tblLista.AddCell(clEvaluado);
                 tblLista.AddCell(clEvaluacion);
                 tblLista.AddCell(clPuesto);
@@ -7540,12 +7547,12 @@ namespace MedToxQui.Controllers
 
                 docListaOcular.Add(tblLista);
 
-                PdfPTable tbSublLista = new PdfPTable(6)
+                PdfPTable tbSublLista = new PdfPTable(7)
                 {
                     TotalWidth = 560,
                     LockedWidth = true
                 };
-                float[] valuesSubLista = new float[6] { 50, 180, 100, 150, 30, 50 };
+                float[] valuesSubLista = new float[7] { 50, 30, 170, 100, 130, 30, 50 };
                 tbSublLista.SetWidths(valuesSubLista);
                 tbSublLista.HorizontalAlignment = 0;
                 tbSublLista.SpacingBefore = 5f;
@@ -7553,7 +7560,10 @@ namespace MedToxQui.Controllers
                 tbSublLista.DefaultCell.Border = 0;
 
                 var subLista = repo.Getdosparam1<ListaSupervisorOcular>("sp_medicos_lista_supervisorOcular_evaluado", new { @fecha = DateTime.Now.ToShortDateString(), @usuario = listaQuimilocos.idQuimico }).ToList();
-                foreach(var subListilla in subLista)
+
+                int consec = 1;
+
+                foreach (var subListilla in subLista)
                 {
                     PdfPCell celldatHola = new PdfPCell(new Phrase("_________", fontDato));
                     celldatHola.BorderWidth = 0;
@@ -7561,6 +7571,12 @@ namespace MedToxQui.Controllers
                     celldatHola.VerticalAlignment = Element.ALIGN_MIDDLE;
                     celldatHola.UseAscender = true;
                     celldatHola.FixedHeight = 15f;
+
+                    PdfPCell celldatConsecutivo = new PdfPCell(new Phrase(consec.ToString(), fontDato));
+                    celldatConsecutivo.BorderWidth = 0;
+                    celldatConsecutivo.HorizontalAlignment = Element.ALIGN_CENTER;
+                    celldatConsecutivo.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    celldatConsecutivo.UseAscender = true;
 
                     PdfPCell celldatEvaluado = new PdfPCell(new Phrase(subListilla.Evaluado, fontDato));
                     celldatEvaluado.BorderWidth = 0;
@@ -7593,30 +7609,14 @@ namespace MedToxQui.Controllers
                     celldatTc.UseAscender = true;
 
                     tbSublLista.AddCell(celldatHola);
+                    tbSublLista.AddCell(celldatConsecutivo);
                     tbSublLista.AddCell(celldatEvaluado);
                     tbSublLista.AddCell(celldatEvaluacion);
                     tbSublLista.AddCell(celldatPuesto);
                     tbSublLista.AddCell(celldatGaf);
                     tbSublLista.AddCell(celldatTc);
 
-                    //Paragraph datosSublista = new Paragraph()
-                    //{
-                    //    Alignment = Element.ALIGN_LEFT
-                    //};
-
-                    //datosSublista.Add(new Phrase("____", fontDato));
-                    //datosSublista.Add(Chunk.TABBING);
-                    //datosSublista.Add(new Phrase(subListilla.Evaluado, fontDato));
-                    //datosSublista.Add(Chunk.TABBING); datosSublista.Add(Chunk.TABBING); datosSublista.Add(Chunk.TABBING);
-                    //datosSublista.Add(new Phrase(subListilla.cevaluacion, fontDato));
-                    //datosSublista.Add(Chunk.TABBING); datosSublista.Add(Chunk.TABBING);
-                    //datosSublista.Add(new Phrase(subListilla.puesto, fontDato));
-                    //datosSublista.Add(Chunk.TABBING);
-                    //datosSublista.Add(new Phrase(subListilla.Gaf.ToString(), fontDato));
-                    //datosSublista.Add(Chunk.TABBING);
-                    //datosSublista.Add(new Phrase("____", fontDato));
-
-                    //docListaOcular.Add(datosSublista);
+                    consec++;
                 }
 
                 docListaOcular.Add(tbSublLista);
