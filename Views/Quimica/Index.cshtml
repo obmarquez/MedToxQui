@@ -39,6 +39,7 @@
                 <tr>
                     <th>IdH</th>
                     <th>Evaluado</th>
+                    <th>Género</th>
                     <th>Fecha</th>
                     <th>Dependencia</th>
                     <th>Folio</th>
@@ -57,6 +58,9 @@
                         </td>
                         <td style="vertical-align:middle;">
                             @Html.DisplayFor(modelITem => item.evaluado)
+                        </td>
+                        <td style="vertical-align:middle;">
+                            @Html.DisplayFor(modelITem => item.sexo)
                         </td>
                         <td style="vertical-align:middle;">
                             @Html.DisplayFor(modelITem => item.fecha)
