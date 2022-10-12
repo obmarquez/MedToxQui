@@ -4699,7 +4699,7 @@ namespace MedToxQui.Controllers
 
                 //-------------------------------------------------------------------------------------------------------- Neutrofilos
                 //[0] - 130
-                PdfPCell celSBNeutrofilos = new PdfPCell(new Phrase("Neutrófilos", fonEiqueta));
+                PdfPCell celSBNeutrofilos = new PdfPCell(new Phrase("Neutrófilos segmentados", fonEiqueta));
                 celSBNeutrofilos.BorderWidth = 0;
                 celSBNeutrofilos.VerticalAlignment = Element.ALIGN_CENTER;
                 celSBNeutrofilos.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -4754,7 +4754,7 @@ namespace MedToxQui.Controllers
 
                 //-------------------------------------------------------------------------------------------------------- Neutrofilos en Banda
                 //[0] - 130
-                PdfPCell celSBNeutrofilosenBanda = new PdfPCell(new Phrase("Neutrófilos", fonEiqueta));
+                PdfPCell celSBNeutrofilosenBanda = new PdfPCell(new Phrase("Neutrófilos en Banda", fonEiqueta));
                 celSBNeutrofilosenBanda.BorderWidth = 0;
                 celSBNeutrofilosenBanda.VerticalAlignment = Element.ALIGN_CENTER;
                 celSBNeutrofilosenBanda.HorizontalAlignment = Element.ALIGN_LEFT;
