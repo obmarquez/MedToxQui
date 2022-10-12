@@ -112,7 +112,7 @@ namespace MedToxQui.Controllers
             return Json(resultado);
         }
 
-        public IActionResult AgregaActualizaBH(int Idhistorico, string FOLIO, decimal WBC, decimal Limph, decimal Mid, decimal Neu, decimal Eos, decimal Bas, decimal Limph2, decimal Mid2, decimal Neu2, decimal Eos2, decimal Bas2, decimal HGB, decimal RBC, decimal HTC, decimal MCv, decimal MCH, decimal MCHC, decimal RDWCV, decimal RDWSD, decimal PLT, decimal MPV, decimal PDW, decimal PCT, string Observacion, string Tiposangre, string Usu_rea_bh, string Usu_superviso, DateTime F_procesahematica, int Accion)
+        public IActionResult AgregaActualizaBH(int Idhistorico, string FOLIO, decimal WBC, decimal Limph, decimal Mid, decimal Neu, decimal Eos, decimal Bas, decimal Limph2, decimal Mid2, decimal Neu2, decimal Eos2, decimal Bas2, decimal HGB, decimal RBC, decimal HTC, decimal MCv, decimal MCH, decimal MCHC, decimal RDWCV, decimal RDWSD, decimal PLT, decimal MPV, decimal PDW, decimal PCT, string Observacion, string Tiposangre, string Usu_rea_bh, string Usu_superviso, DateTime F_procesahematica, int Accion, decimal Banda, decimal Banda2)
         {
             BiometriaModel BHModel = new BiometriaModel();
             BHModel.Idhistorico = Idhistorico;
@@ -147,6 +147,8 @@ namespace MedToxQui.Controllers
             BHModel.Usu_superviso = Usu_superviso;
             BHModel.F_procesahematica = F_procesahematica;
             BHModel.Accion = Accion;
+            BHModel.Banda = Banda;
+            BHModel.Banda2 = Banda2;
 
             string resBH = "Ok";
 

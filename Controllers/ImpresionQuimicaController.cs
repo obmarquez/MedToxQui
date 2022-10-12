@@ -1328,9 +1328,9 @@ namespace MedToxQui.Controllers
             celSBMonocitoabsoluto.VerticalAlignment = Element.ALIGN_CENTER;
             celSBMonocitoabsoluto.HorizontalAlignment = Element.ALIGN_CENTER;
 
-            //-------------------------------------------------------------------------------------------------------- Neutrofilos
+            //-------------------------------------------------------------------------------------------------------- Neutrofilos segmetnados
             //[0] - 130
-            PdfPCell celSBNeutrofilos = new PdfPCell(new Phrase("Neutrófilos", fonEiqueta));
+            PdfPCell celSBNeutrofilos = new PdfPCell(new Phrase("Neutrófilos segmentados", fonEiqueta));
             celSBNeutrofilos.BorderWidth = 0;
             celSBNeutrofilos.VerticalAlignment = Element.ALIGN_CENTER;
             celSBNeutrofilos.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -1381,6 +1381,60 @@ namespace MedToxQui.Controllers
             celSBNeutrofiloabsoluto.BorderWidth = 0;
             celSBNeutrofiloabsoluto.VerticalAlignment = Element.ALIGN_CENTER;
             celSBNeutrofiloabsoluto.HorizontalAlignment = Element.ALIGN_CENTER;
+
+            //-------------------------------------------------------------------------------------------------------- Neutrofilos en banda
+            //[0] - 130
+            PdfPCell celSBNeutrofilosenBanda = new PdfPCell(new Phrase("Neutrófilos en Banda", fonEiqueta));
+            celSBNeutrofilosenBanda.BorderWidth = 0;
+            celSBNeutrofilosenBanda.VerticalAlignment = Element.ALIGN_CENTER;
+            celSBNeutrofilosenBanda.HorizontalAlignment = Element.ALIGN_LEFT;
+
+            //[1] - 20
+            PdfPCell celSBNeutrofilosVacioenBanda = new PdfPCell(new Phrase("", fonEiqueta));
+            celSBNeutrofilosVacioenBanda.BorderWidth = 0;
+            celSBNeutrofilosVacioenBanda.VerticalAlignment = Element.ALIGN_CENTER;
+            celSBNeutrofilosVacioenBanda.HorizontalAlignment = Element.ALIGN_LEFT;
+
+            //[2] - 120
+            decimal NeutrofilosenBanda = Convert.ToDecimal(datosBH.Banda2);
+            PdfPCell celSBDatoNeutrofilosenBanda = new PdfPCell(new Phrase(NeutrofilosenBanda.ToString("F2"), fontDato));
+            celSBDatoNeutrofilosenBanda.BorderWidth = 0;
+            celSBDatoNeutrofilosenBanda.VerticalAlignment = Element.ALIGN_CENTER;
+            celSBDatoNeutrofilosenBanda.HorizontalAlignment = Element.ALIGN_CENTER;
+
+            //[3] - 20
+            PdfPCell celSBNeutrofilosFleenBanda = new PdfPCell();
+            switch (datosBH.fr_banda)
+            {
+                case -1:
+                    celSBNeutrofilosFleenBanda.AddElement(fAbajo);
+                    break;
+                case 1:
+                    celSBNeutrofilosFleenBanda.AddElement(fArriba);
+                    break;
+            }
+            celSBNeutrofilosFleenBanda.BorderWidth = 0;
+            celSBNeutrofilosFleenBanda.VerticalAlignment = Element.ALIGN_CENTER;
+            celSBNeutrofilosFleenBanda.HorizontalAlignment = Element.ALIGN_LEFT;
+
+            //[4] - 110
+            decimal NeutrofiloabsenBanda = Convert.ToDecimal(datosBH.Banda);
+            PdfPCell celSBDatoNeutrofiloabsolutoenBanda = new PdfPCell(new Phrase(NeutrofiloabsenBanda.ToString("F2"), fontDato));
+            celSBDatoNeutrofiloabsolutoenBanda.BorderWidth = 0;
+            celSBDatoNeutrofiloabsolutoenBanda.VerticalAlignment = Element.ALIGN_CENTER;
+            celSBDatoNeutrofiloabsolutoenBanda.HorizontalAlignment = Element.ALIGN_CENTER;
+
+            //[5] - 80
+            PdfPCell celSBAbsNeutrofiloenBanda = new PdfPCell(new Phrase("0", fontDato));
+            celSBAbsNeutrofiloenBanda.BorderWidth = 0;
+            celSBAbsNeutrofiloenBanda.VerticalAlignment = Element.ALIGN_CENTER;
+            celSBAbsNeutrofiloenBanda.HorizontalAlignment = Element.ALIGN_CENTER;
+
+            //[6] - 80
+            PdfPCell celSBNeutrofiloabsolutoenBanda = new PdfPCell(new Phrase("0", fontDato));
+            celSBNeutrofiloabsolutoenBanda.BorderWidth = 0;
+            celSBNeutrofiloabsolutoenBanda.VerticalAlignment = Element.ALIGN_CENTER;
+            celSBNeutrofiloabsolutoenBanda.HorizontalAlignment = Element.ALIGN_CENTER;
 
             //-------------------------------------------------------------------------------------------------------- Eosinofilos
             //[0] - 130
@@ -1536,6 +1590,15 @@ namespace MedToxQui.Controllers
             tblSB.AddCell(celSBDatoNeutrofiloabsoluto);
             tblSB.AddCell(celSBAbsNeutrofilo);
             tblSB.AddCell(celSBNeutrofiloabsoluto);
+
+            tblSB.AddCell(celSBNeutrofilosenBanda);
+            tblSB.AddCell(celSBNeutrofilosVacioenBanda);
+            tblSB.AddCell(celSBDatoNeutrofilosenBanda);
+            tblSB.AddCell(celSBNeutrofilosFleenBanda);
+            tblSB.AddCell(celSBDatoNeutrofiloabsolutoenBanda);
+            tblSB.AddCell(celSBAbsNeutrofiloenBanda);
+            tblSB.AddCell(celSBNeutrofiloabsolutoenBanda);
+
 
             tblSB.AddCell(celSBEosinofilos);
             tblSB.AddCell(celSBEosinofilosVacio);            

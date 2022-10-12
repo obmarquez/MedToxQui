@@ -70,5 +70,8 @@ namespace MedToxQui.Models.Consultas
         public int fr_eos { get; set; }
         public int fr_bas { get; set; }
         public int fr_wbc { get; set; }
+        public decimal Banda2 { get; set; }
+        public decimal Banda { get; set; }
+        public int fr_banda { get; set; }
     }
 }

@@ -39,5 +39,7 @@ namespace MedToxQui.Models.QuimicaModel
         public string Usu_superviso { get; set; }
         public DateTime F_procesahematica { get; set; }
         public int Accion { get; set; }
+        public decimal Banda { get; set; }
+        public decimal Banda2 { get; set; }
     }
 }

@@ -368,6 +368,10 @@
                                     <div class="col-sm-8"><input type="text" class="form-control" id="Bas2" name="Bas2"></div>
                                 </div>
                                 <div class="form-group">
+                                    <label class="col-sm-4 control-label">Banda %</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Banda2" name="Banda2"></div>
+                                </div>
+                                <div class="form-group">
                                     <label class="col-sm-4 control-label">Limp #</label>
                                     <div class="col-sm-8"><input type="text" class="form-control" id="Limph" name="Limph" readonly></div>
                                 </div>
@@ -388,6 +392,10 @@
                                 <div class="form-group">
                                     <label class="col-sm-4 control-label">Bas #</label>
                                     <div class="col-sm-8"><input type="text" class="form-control" id="Bas" name="Bas" readonly></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Banda #</label>
+                                    <div class="col-sm-8"><input type="text" class="form-control" id="Banda" name="Banda" readonly></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-4 control-label">HGB</label>
@@ -1182,8 +1190,13 @@
         $('#Bas2').blur(function () {
             var v_limp2 = ($('#WBC').val() * ($('#Bas2').val() / 100)).toFixed(2);
             $('#Bas').val(v_limp2);
+        });
 
-            cientporciento = (Number($('#Limph2').val()) + Number($('#Mid2').val()) + Number($('#Neu2').val()) + Number($('#Eos2').val()) + Number($('#Bas2').val()));
+        $('#Banda2').blur(function () {
+            var v_limp2 = ($('#WBC').val() * ($('#Banda2').val() / 100)).toFixed(2);
+            $('#Banda').val(v_limp2);
+
+            cientporciento = (Number($('#Limph2').val()) + Number($('#Mid2').val()) + Number($('#Neu2').val()) + Number($('#Eos2').val()) + Number($('#Bas2').val()) + Number($('#Banda2').val()));
 
             if (cientporciento != 100) {
                 swal("No esta el 100% requerido", "Verifique los porcentajes", "error");
@@ -1198,11 +1211,13 @@
             $('#Neu2').val('');
             $('#Eos2').val('');
             $('#Bas2').val('');
+            $('#Banda2').val('');
             $('#Limph').val('');
             $('#Mid').val('');
             $('#Neu').val('');
             $('#Eos').val('');
             $('#Bas').val('');
+            $('#Banda').val('');
             $('#HGB').val('');
             $('#RBC').val('');
             $('#HTC').val('');
@@ -1271,6 +1286,8 @@
                     $('#Observacionqs').val(data.observacion);
                     $('#usu_rea_bh').val(data.usu_rea_bh);
                     $('#usu_superviso').val(data.usu_superviso);
+                    $('#Banda2').val(data.banda2);
+                    $('#Banda').val(data.banda);
 
                 },
                 error: function (result) {
@@ -1288,11 +1305,13 @@
             var _Neu = $('#Neu').val();
             var _Eos = $('#Eos').val();
             var _Bas = $('#Bas').val();
+            var _Banda = $('#Banda').val();
             var _Limph2 = $('#Limph2').val();
             var _Mid2 = $('#Mid2').val();
             var _Neu2 = $('#Neu2').val();
             var _Eos2 = $('#Eos2').val();
             var _Bas2 = $('#Bas2').val();
+            var _Banda2 = $('#Banda2').val();
             var _HGB = $('#HGB').val();
             var _RBC = $('#RBC').val();
             var _HTC = $('#HTC').val();
@@ -1313,7 +1332,7 @@
             var _f_procesahematica = $('#f_procesahematica').val();
             var _accion = $("#accion").val();
 
-            if (Number($('#Limph2').val()) + Number($('#Mid2').val()) + Number($('#Neu2').val()) + Number($('#Eos2').val()) + Number($('#Bas2').val()) != 100) {
+            if (Number($('#Limph2').val()) + Number($('#Mid2').val()) + Number($('#Neu2').val()) + Number($('#Eos2').val()) + Number($('#Bas2').val()) + Number($('#Banda2').val()) != 100) {
 
                 swal("No esta el 100% requerido", "Verifique los porcentajes", "error");
 
@@ -1325,7 +1344,7 @@
             }
             else {
                 var url = "@Url.Action("AgregaActualizaBH", "Quimica")";
-                var data = { Idhistorico: _idhistorico, FOLIO: _FOLIO, WBC: _WBC, Limph: _Limph, Mid: _Mid, Neu: _Neu, Eos: _Eos, Bas: _Bas, Limph2: _Limph2, Mid2: _Mid2, Neu2: _Neu2, Eos2: _Eos2, Bas2: _Bas2, HGB: _HGB, RBC: _RBC, HTC: _HTC, MCv: _MCv, MCH: _MCH, MCHC: _MCHC, RDWCV: _RDWCV, RDWSD: _RDWSD, PLT: _PLT, MPV: _MPV, PDW: _PDW, PCT: _PCT, Observacion: _Observacion, Tiposangre: _Tiposangre, Usu_rea_bh: _usu_rea_bh, Usu_superviso: _usu_superviso, F_procesahematica: _f_procesahematica, Accion: _accion };
+                var data = { Idhistorico: _idhistorico, FOLIO: _FOLIO, WBC: _WBC, Limph: _Limph, Mid: _Mid, Neu: _Neu, Eos: _Eos, Bas: _Bas, Limph2: _Limph2, Mid2: _Mid2, Neu2: _Neu2, Eos2: _Eos2, Bas2: _Bas2, HGB: _HGB, RBC: _RBC, HTC: _HTC, MCv: _MCv, MCH: _MCH, MCHC: _MCHC, RDWCV: _RDWCV, RDWSD: _RDWSD, PLT: _PLT, MPV: _MPV, PDW: _PDW, PCT: _PCT, Observacion: _Observacion, Tiposangre: _Tiposangre, Usu_rea_bh: _usu_rea_bh, Usu_superviso: _usu_superviso, F_procesahematica: _f_procesahematica, Accion: _accion, Banda: _Banda, Banda2: _Banda2 };
                 $.post(url, data).done(function (data) {
                     if (data == "Ok") {
 
