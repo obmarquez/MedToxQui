@@ -75,6 +75,33 @@ namespace MedToxQui.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador, Quimica")]
+        public IActionResult IndexPAFTOX(string fecha = "")
+        {
+            if (fecha == "")
+                return View();
+            else
+            {
+                ViewBag.fechapasarTox2 = fecha;
+
+                List<SelectListItem> toxMuestra = new List<SelectListItem>();
+                toxMuestra.Add(new SelectListItem { Text = "Orina", Value = "Orina" });
+                toxMuestra.Add(new SelectListItem { Text = "Sangre", Value = "Sangre" });
+                toxMuestra.Add(new SelectListItem { Text = "Cabello", Value = "Cabello" });
+                toxMuestra.Add(new SelectListItem { Text = "Saliva", Value = "Saliva" });
+                ViewBag.toxMuestras = toxMuestra;
+
+                List<SelectListItem> metodoTox = new List<SelectListItem>();
+                metodoTox.Add(new SelectListItem { Text = "Inmunoensayo cromatográfico", Value = "Inmunoensayo cromatográfico" });
+                metodoTox.Add(new SelectListItem { Text = "Inmunoensayo enzimático", Value = "Inmunoensayo enzimático" });
+                ViewBag.metodologiaTOX = metodoTox;
+
+                ViewBag.losQuimicos = repo.Getdosparam1<Usuarios>("sp_medicos_obtener_usuarios", new { @opcion = 1 }).ToList();
+
+                return View(repo.Getdosparam1<ListaExamenesQuimicosModel>("sp_medicos_lista_estudios_quimicos_a_realizar_Paf_Tox", new { @fecha = fecha }).ToList());
+            }
+        }
+
         public IActionResult AgregaActualizaEGO(int idhistorico, string FOLIO, string Aspecto, string Color, decimal PH, decimal Densidad, string Glucosa, string Bilirrubina, string Cetona, string Proteinas, decimal Urobilinogeno, string Sangre, string Nitritos, string Leucocitos, string Eritrocitos, string Bacterias, string Celulas, string Cilindros, string Cristales, string Observaciones, string usu_rea_ego, string AcidoAscorbico, string usu_superviso, DateTime f_procesamiento, int accion)
         {
             ExGeOrModel ExGeOr = new ExGeOrModel();

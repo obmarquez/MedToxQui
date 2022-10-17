@@ -74,7 +74,8 @@
                             <a href="#"><i class="fa fa-flask"></i> <span class="nav-label">Quimica</span><span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li><a href="@Url.Action("IndexAsociar", "Quimica")"><i class="fa fa-exchange"></i>Asociacion</a></li>
-                                <li><a href="@Url.Action("Index", "Quimica")"><i class="fa fa-file-text-o"></i>Estudios</a></li>
+                                <li><a href="@Url.Action("Index", "Quimica")"><i class="fa fa-file-text-o"></i>Estudios Integral</a></li>
+                                <li><a href="@Url.Action("IndexPAFTOX", "Quimica")"><i class="fa fa-file-text-o"></i>Estudios PAF-TOX</a></li>
                             </ul>
                         </li>
                     }
@@ -86,7 +87,7 @@
                             <ul class="nav nav-second-level">
                                 <li><a href="@Url.Action("Index", "ImpresionQuimica")"><i class="fa fa-flask"></i>Lab C3</a></li>
                                 <li><a href="@Url.Action("IndexPAFTSC3", "ImpresionQuimica")"><i class="fa fa-flask"></i>PAF - TS C3</a></li>
-                                <li><a href="@Url.Action("IndexMovil", "ImpresionQuimica")"><i class="fa fa-flask"></i>Móvil </a></li>
+                                @*<li><a href="@Url.Action("IndexMovil", "ImpresionQuimica")"><i class="fa fa-flask"></i>Móvil </a></li>*@
                                 <li><a href="@Url.Action("IndexAceptaciones", "ImpresionAceptaciones")"><i class="fa fa-chain"></i>Acept - Cad.</a></li>
                             </ul>
                         </li>
@@ -103,6 +104,7 @@
                                 <li><a href="@Url.Action("IndexAnalisis", "Consultas")"><i class="fa fa-flask"></i>Análisis Quimicos</a></li>
                             }
                             <li><a href="@Url.Action("listaSupervisorOcular", "ImpresionQuimica")"><i class="fa fa-list"></i>Listado Sup - Eva</a></li>
+                            <li><a href="@Url.Action("IndexGrafica", "Consultas")"><i class="fa fa-list"></i>Gráficas</a></li>
                         </ul>
                     </li>
 

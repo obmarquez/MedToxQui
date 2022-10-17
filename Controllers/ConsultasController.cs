@@ -58,5 +58,27 @@ namespace MedToxQui.Controllers
                 return View(repo.Getdosparam1<ListaExamenesQuimicosModel>("sp_medicos_lista_estudios_quimicos", new { @fecha = fecha }).ToList());
             }
         }
+
+        public IActionResult IndexGrafica(string fecha01 = "", string fecha02 = "")
+        {
+            if (fecha01 == "" || fecha02 == "")
+            {
+                ViewBag.totalGenero = repo.Getdosparam1<GraficasQuimicas>("sp_medicos_quimica_obtener_valores_graficas", new { @opcion = 2, @fecha01 = "01/01/1900", @fecha02 = "01/01/1900" }).ToList();
+                ViewBag.totalInstitucion = repo.Getdosparam1<GraficasQuimicas>("sp_medicos_quimica_obtener_valores_graficas", new { @opcion = 4, @fecha01 = "01/01/1900", @fecha02 = "01/01/1900" }).ToList();
+                ViewBag.totalTipoEvaluacion = repo.Getdosparam1<GraficasQuimicas>("sp_medicos_quimica_obtener_valores_graficas", new { @opcion = 3, @fecha01 = "01/01/1900", @fecha02 = "01/01/1900" }).ToList();
+                ViewBag.totalAnalitos = repo.Getdosparam1<GraficasQuimicas>("sp_medicos_quimica_obtener_valores_graficas", new { @opcion = 1, @fecha01 = "01/01/1900", @fecha02 = "01/01/1900" }).ToList();
+
+                return View();
+            }
+            else
+            {
+                ViewBag.totalGenero = repo.Getdosparam1<GraficasQuimicas>("sp_medicos_quimica_obtener_valores_graficas", new { @opcion = 2, @fecha01 = fecha01, @fecha02 = fecha02 }).ToList();
+                ViewBag.totalInstitucion = repo.Getdosparam1<GraficasQuimicas>("sp_medicos_quimica_obtener_valores_graficas", new { @opcion = 4, @fecha01 = fecha01, @fecha02 = fecha02 }).ToList();
+                ViewBag.totalTipoEvaluacion = repo.Getdosparam1<GraficasQuimicas>("sp_medicos_quimica_obtener_valores_graficas", new { @opcion = 3, @fecha01 = fecha01, @fecha02 = fecha02 }).ToList();
+                ViewBag.totalAnalitos = repo.Getdosparam1<GraficasQuimicas>("sp_medicos_quimica_obtener_valores_graficas", new { @opcion = 1, @fecha01 = fecha01, @fecha02 = fecha02 }).ToList();
+
+                return View();
+            }
+        }
     }
 }

@@ -1,0 +1,365 @@
+﻿
+@{
+    ViewData["Title"] = "IndexGrafica";
+}
+
+@using (Html.BeginForm("IndexGrafica", "Consultas"))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Gráficas varias. <small>Rango de fecha Basado en fecha de alta</small>
+        </div>
+        <div class="panel-body">
+
+            <div class="row form-group">
+                <div class="col-md-3">
+                    <div id="data_1">
+                        <div class="input-group date">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" id="fecha01" name="fecha01" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div id="data_1">
+                        <div class="input-group date">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" id="fecha02" name="fecha02" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="ibox-content">
+                <div id="container_genero" style="min-width: 310px; height: 300px; margin: 0 auto">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="ibox-content">
+                <div id="container_institucion" style="min-width: 310px; height: 300px; margin: 0 auto">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="ibox-content">
+                <div id="container_TipoEvaluacion" style="min-width: 310px; height: 300px; margin: 0 auto">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="ibox-content">
+                <div id="container_Analitos" style="min-width: 310px; height: 300px; margin: 0 auto">
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
+@section scripts
+    {
+    @*-- css --*@
+    <link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/css/plugins/iCheck/custom.css" rel="stylesheet" />
+
+    @*-- js --*@
+
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/js/plugins/iCheck/icheck.min.js"></script>
+    <script src="~/scriptsHighcharts/highcharts.min.js"></script>
+    <script src="~/scriptsHighcharts/exporting.min.js"></script>
+    <script src="~/scriptsHighcharts/export-data.min.js"></script>
+    <script src="~/scriptsHighcharts/data.min.js"></script>
+    <script src="~/scriptsHighcharts/accessibility.min.js"></script>
+
+    <script language="javascript">
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            $('.dataTables-example').DataTable({
+                pageLength: 50,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy' },
+                    { extend: 'csv' },
+                    { extend: 'excel', title: 'EntradaDiaria' },
+                    { extend: 'pdf', title: 'EntadaDiaria' },
+
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+                ]
+
+            });
+        });
+
+        $('#data_1 .input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true,
+            format: "dd/mm/yyyy"
+        });
+
+        //------------------------------------------------- Gráfica Genero
+        var myArray_Genero = [];
+        var tri_Genero = [];
+        @foreach (var item in @ViewBag.totalGenero)
+        {
+            @:tri_Genero =["@item.Valor", parseFloat(@item.Total), "@item.Valor"];
+            @:myArray_Genero.push(tri_Genero);
+        }
+
+            Highcharts.chart('container_genero', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Gráfica por Genero'
+                },
+                subtitle: {
+                    text: 'Total Genero basadas en fecha'
+                },
+                accessibility: {
+                    announceNewData: {
+                        enabled: true
+                    }
+                },
+                xAxis: {
+                    type: 'category'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Genero al mes'
+                    }
+
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    series: {
+                        borderWidth: 0,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y}'
+                        }
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> <br/>'
+                },
+                series: [
+                    {
+                        name: "Genero",
+                        colorByPoint: true,
+                        data: myArray_Genero
+                    }
+                ]
+            })
+
+        //------------------------------------------------- Gráfica Institucion
+        var myArray_Institucion = [];
+        var tri_Institucion = [];
+        @foreach (var item in @ViewBag.totalInstitucion)
+        {
+            @:tri_Institucion =["@item.Valor", parseFloat(@item.Total), "@item.Valor"];
+            @:myArray_Institucion.push(tri_Institucion);
+        }
+
+            Highcharts.chart('container_institucion', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Institucion (100) Dep (111) Mun'
+                },
+                subtitle: {
+                    text: 'Total por Institución'
+                },
+                accessibility: {
+                    announceNewData: {
+                        enabled: true
+                    }
+                },
+                xAxis: {
+                    type: 'category'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Totales al mes'
+                    }
+
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    series: {
+                        borderWidth: 0,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y}'
+                        }
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> <br/>'
+                },
+                series: [
+                    {
+                        name: "Institucion",
+                        colorByPoint: true,
+                        data: myArray_Institucion
+                    }
+                ]
+            })
+
+        //------------------------------------------------- Gráfica Tipo Evaluacion
+        var myArray_TipoEvaluacion = [];
+        var tri_TipoEvaluacion = [];
+        @foreach (var item in @ViewBag.totalTipoEvaluacion)
+        {
+            @:tri_TipoEvaluacion =["@item.Valor", parseFloat(@item.Total), "@item.Valor"];
+            @:myArray_TipoEvaluacion.push(tri_TipoEvaluacion);
+        }
+
+            Highcharts.chart('container_TipoEvaluacion', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Totales por Tipo Evaluación'
+                },
+                subtitle: {
+                    text: 'Todas los tipos'
+                },
+                accessibility: {
+                    announceNewData: {
+                        enabled: true
+                    }
+                },
+                xAxis: {
+                    type: 'category'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Totales al mes'
+                    }
+
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    series: {
+                        borderWidth: 0,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y}'
+                        }
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> <br/>'
+                },
+                series: [
+                    {
+                        name: "Evaluacion",
+                        colorByPoint: true,
+                        data: myArray_TipoEvaluacion
+                    }
+                ]
+            })
+
+        //------------------------------------------------- Gráfica Tipo Analitos
+        var myArray_Analitos = [];
+        var tri_Analitos = [];
+        @foreach (var item in @ViewBag.totalAnalitos)
+        {
+            @:tri_Analitos =["@item.Valor", parseFloat(@item.Total), "@item.Valor"];
+            @:myArray_Analitos.push(tri_Analitos);
+        }
+
+            Highcharts.chart('container_Analitos', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Totales por Analitos'
+                },
+                subtitle: {
+                    text: 'Todas los analitos'
+                },
+                accessibility: {
+                    announceNewData: {
+                        enabled: true
+                    }
+                },
+                xAxis: {
+                    type: 'category'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Totales al mes'
+                    }
+
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    series: {
+                        borderWidth: 0,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y}'
+                        }
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> <br/>'
+                },
+                series: [
+                    {
+                        name: "Analitos",
+                        colorByPoint: true,
+                        data: myArray_Analitos
+                    }
+                ]
+            })
+
+    </script>
+
+}

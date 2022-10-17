@@ -84,7 +84,8 @@
         function allReports() {
             var _fechita = $("#fecha").val();
             //alert("La fecha es: " + _fechita + " Opcion: " + _opcion);
-            location.href = '@Url.Action("allPAXTS", "ImpresionQuimica")' + '?fechaAll=' + _fechita;
+            //location.href = '@Url.Action("allPAXTS", "ImpresionQuimica")' + '?fechaAll=' + _fechita;
+            location.href = '@Url.Action("allMovil", "ImpresionQuimica")' + '?fechaAll=' + _fechita;
         }
 
     </script>
